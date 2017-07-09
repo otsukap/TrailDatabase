@@ -1,5 +1,5 @@
 {
-    "name": "Florida Trails Database",
+    "name": "Florida_Trails_Database",
     "version": "0.0.1",
     "scripts": {
         "start": "node app.js"
