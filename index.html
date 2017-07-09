@@ -1,9 +1,58 @@
 <html>
-	
 	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="v4.2.0-dist/ol.css">
 	</head>
 	<body>
-		This is a test.
+		
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Florida Trail Database</a>
+        </div>
+      </div>
+    </nav>
+	
+	<!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Explore Florida</h1>
+        <p>Blah blah blah blah blah</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Get started</a></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-3">
+          <h2>Find a Trail</h2>
+			<div id="search">
+				Search form goes here.
+			</div> 
+        </div>
+        <div class="col-md-9">
+          <div id="map" class="map">
+			
+		  </div>
+       </div>
+      </div>
+
+	
+	<!-- Javascript files -->
+	<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="v4.2.0-dist/ol.js"></script>
+	<script type="text/javascript" src="script.js"></script>
 	</body>
 </html>
