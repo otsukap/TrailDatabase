@@ -1,3 +1,6 @@
+// 
+// Create map object
+//
 var map = new ol.Map({
         layers: [
           new ol.layer.Tile({
@@ -15,15 +18,3 @@ var map = new ol.Map({
           zoom: 2
         })
       });
-
-      // document.getElementById('zoom-out').onclick = function() {
-        // var view = map.getView();
-        // var zoom = view.getZoom();
-        // view.setZoom(zoom - 1);
-      // };
-
-      // document.getElementById('zoom-in').onclick = function() {
-        // var view = map.getView();
-        // var zoom = view.getZoom();
-        // view.setZoom(zoom + 1);
-      // };
