@@ -1,4 +1,3 @@
-CREATE DATABASE trails_db;
 USE trails_db;
 
 CREATE TABLE Trails (
@@ -7,18 +6,9 @@ CREATE TABLE Trails (
         lat DECIMAL(10, 8) NOT NULL,
         lng DECIMAL(11, 8) NOT NULL,
         gps_data TEXT,
-        PRIMARY KEY (tid)
-);
-
-CREATE TABLE Land_trails (
-        tid INT REFERENCES Trails(tid),
+        trail_type TEXT,
         surface_type VARCHAR(64),
         elevation_change INT,
-        PRIMARY KEY (tid)
-);
-
-CREATE TABLE Water_trails (
-        tid INT REFERENCES Trails(tid),
         depth INT,
         waterbody_type VARCHAR(64),
         PRIMARY KEY (tid)
