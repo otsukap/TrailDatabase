@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="v4.2.0-dist/ol.css">
+	</head>
+	<body>
+		
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Florida Trail Database</a>
+        </div>
+      </div>
+    </nav>
+	
+	<!-- Main jumbotron (will probably change to non-obtrusive carousel later -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Explore Florida</h1>
+        <p>Administrator page</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+		  <!-- Search form -->
+          <ul class="nav nav-tabs" role="tablist">
+			  <li id="addTrailTab" role="presentation" class="active"><a href="#addTrail" aria-controls="addTrail" role="tab" data-toggle="tab">Add trail</a></li>
+			  <li id="editTrailTab" role="presentation"><a href="#editTrail" aria-controls="editTrail" role="tab" data-toggle="tab">Edit trail</a></li>
+			  <li id="deleteTrailTab" role="presentation"><a href="#deleteTrail" aria-controls="deleteTrail" role="tab" data-toggle="tab">Delete trail</a></li>
+		  </ul>
+		  <div class="tab-content">
+			  <!--------------------
+			  Add Trail Form 
+			  --------------------->
+			  <div role="tabpanel" class="tab-pane active" id="addTrail" aria-labelledby="addTrailTab">
+				<form class="form-horizontal">
+				  <div class="form-group">
+					<div class=col-sm-2></div><div class="col-sm-6"><h4>Add a New Trail</h4></div>
+				  </div>
+				  <div class="form-group">
+					<label for="inputName" class="col-sm-2 control-label">Name</label>
+					<div class="col-sm-6">
+					  <input class="form-control" id="inputName" placeholder="Name">
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label for="inputGPSData" class="col-sm-2 control-label">GPS Data File (.gpx files only)</label>
+					<div class="col-sm-6">
+					  <input class="form-control" id="inputGPSData" placeholder="GPS Data">
+					</div>
+					<label class="btn btn-default" id="browseGPSData">
+						Browse <input type="file" hidden>
+					</label>
+				  </div>
+				  <div class="form-group">
+					<label for="inputPicture" class="col-sm-2 control-label">Add Picture</label>
+					<div class="col-sm-6">
+					  <input class="form-control" id="inputPicture" placeholder="Image File">
+					</div>
+					<label class="btn btn-default" id="browsePicture">
+						Browse <input type="file" hidden>
+					</label>
+				  </div>
+				  <div class="form-group">
+					<div class="col-sm-offset-2 col-sm-6">
+					  <button type="submit" class="btn btn-default">Add Trail</button>
+					</div>
+				  </div>
+				</form>
+			  </div>
+			  <!--------------------
+			  Edit Trail Form 
+			  --------------------->
+			  <div role="tabpanel" class="tab-pane" id="editTrail" aria-labelledby="editTrailTab">
+			  </div>
+			  <!--------------------
+			  Delete Trail Form 
+			  --------------------->
+			  <div role="tabpanel" class="tab-pane" id="deleteTrail" aria-labelledby="deleteTrailTab">
+			  </div>
+		  </div>
+        </div>
+      </div>
+
+	
+	<!-- Javascript files -->
+	<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="v4.2.0-dist/ol.js"></script>
+	<script type="text/javascript" src="adminScript.js"></script>
+	</body>
+</html>

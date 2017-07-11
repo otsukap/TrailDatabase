@@ -3,6 +3,20 @@ body {
   padding-bottom: 20px;
 }
 
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
 /* .jumbotron .container{ */
   /* background-image: url("images/splash.jpg"); */
 /* } */
+
+.tab-pane {
+	padding-top: 40px;
+}
+
+input[type="file"]{
+	display: none !important;
+}

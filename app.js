@@ -144,8 +144,8 @@ router.route("/trails/water")
             typeof req.body.lat !== 'undefined' &&
             typeof req.body.lng !== 'undefined' &&
             typeof req.body.gps_data !== 'undefined' &&
-            typeof req.body.surface_type !== 'undefined' &&
-            typeof req.body.elevation_change !== 'undefined'
+            typeof req.body.surface_type !== 'undefined' && // should be water_body_type
+            typeof req.body.elevation_change !== 'undefined' // ?
        ) {
         connection.query("INSERT INTO Trails (name, lat, lng, trail_type, gps_data, surface_type, elevation_change) VALUES (?,?,?,?,?,?,?)",
                 [req.body.name, req.body.lat, req.body.lng, 'WATER', req.body.gps_data, req.body.surface_type, req.body.elevation_change],
