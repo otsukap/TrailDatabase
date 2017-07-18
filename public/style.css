@@ -33,3 +33,22 @@ input[type="file"]{
 	font-size: 42pt;
 	font-shadow: 0 0 5 5;
 }
+
+.trailImage{
+	width: 240px;
+	height: 240px;
+	overflow: hidden;
+	position: relative;
+	float: left;
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin: 4px;
+}
+
+/* .img-rounded{ */
+	/* width: 240px; */
+	/* height: 240px; */
+	/* background-repeat: no-repeat; */
+	/* background-size: cover; */
+	/* position: relative; */
+/* } */

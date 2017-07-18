@@ -16,20 +16,20 @@ var style = {
 		}),
 		radius: 5,
 		stroke: new ol.style.Stroke({
-		  color: '#ff0',
+		  color: '#ef0000',
 		  width: 1
 		})
 	  })
 	}),
 	'LineString': new ol.style.Style({
 	  stroke: new ol.style.Stroke({
-		color: '#f00',
+		color: '#ef0000',
 		width: 3
 	  })
 	}),
 	'MultiLineString': new ol.style.Style({
 	  stroke: new ol.style.Stroke({
-		color: '#0f0',
+		color: '#ef0000',
 		width: 3
 	  })
 	})

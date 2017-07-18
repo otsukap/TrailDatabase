@@ -25,6 +25,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.set("port", process.env.PORT || 80);
 
+app.use(express.static('public'));
+
 // Routes for API
 var router = express.Router();
 
