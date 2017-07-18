@@ -1,4 +1,11 @@
 //
+// Raster
+//
+var raster = new ol.layer.Tile({
+	source: new ol.source.OSM()
+});
+
+//
 // Style the trail path stroke
 //
 var style = {
@@ -45,12 +52,7 @@ var vector = new ol.layer.Vector({
 // Create map object
 //
 var map = new ol.Map({
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          }),
-		  vector
-        ],
+        layers: [raster, vector],
         target: 'map',
         controls: ol.control.defaults({
           attributionOptions:({

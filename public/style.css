@@ -1,0 +1,35 @@
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+#splash{
+	background-image: url("images/splash_blur.jpg"); 
+	background-size: cover;
+	margin-bottom: 30px;
+	background-position: center; 
+} 
+
+#splash .container{
+	padding-top: 100px;
+	padding-bottom: 100px;
+}
+
+.tab-pane {
+	padding-top: 40px;
+}
+
+input[type="file"]{
+	display: none !important;
+}
+
+#pageTitle{
+	font-size: 42pt;
+	font-shadow: 0 0 5 5;
+}
