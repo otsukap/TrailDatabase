@@ -57,7 +57,7 @@ router.route("/trails/:tid")
 })
 .delete(function(req, res) {
     // Delete a trail with that ID
-    connection.query("DELETE FROM Trails WHERE id = " + req.params.tid, function(error, rows, fields) {
+    connection.query("DELETE FROM Trails WHERE id = " + req.params.tid, function(err, rows, fields) {
         if (!err)
             res.json({ "message": "Deleted trail " + req.params.pid });
         else
