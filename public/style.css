@@ -45,6 +45,30 @@ input[type="file"]{
 	margin: 4px;
 }
 
+.inputPicture,
+.pictureButtons {
+	margin-bottom: 5px !important;
+}
+
+span.glyphicon.glyphicon-remove-circle {
+	padding-top: 2px;
+	padding-bottom: 4px;
+}
+
+.form-group {
+	position: relative;
+}
+
+#browsePicture {
+	position: absolute;
+	bottom: 0px;
+}
+
+/* #trailType, */
+/* #trailType button { */
+	/* width: 100%; */
+/* } */
+
 /* .img-rounded{ */
 	/* width: 240px; */
 	/* height: 240px; */

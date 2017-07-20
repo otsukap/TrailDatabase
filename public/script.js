@@ -1,4 +1,12 @@
 //
+// Form functions
+//
+$('#trailType li a').click(function(){
+	$('#trailType .btn:first-child').html($(this).text() + " <span class='caret'></span>");
+	$('#trailType .btn:first-child').val($(this).text());
+})
+
+//
 // Raster
 //
 var raster = new ol.layer.Tile({
