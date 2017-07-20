@@ -70,7 +70,7 @@ router.route("/trails/land")
     // Get all land trails
     var response = [];
 
-    connection.query("SELECT * FROM Trails WHERE type = 'LAND'", function(err, rows, fields) {
+    connection.query("SELECT * FROM Trails WHERE trail_type = 'LAND'", function(err, rows, fields) {
         if (!err && rows.length > 0) {
             console.log(rows);
             response.push({ "result": "success" });
@@ -124,7 +124,7 @@ router.route("/trails/water")
     // Get all water trails
     var response = [];
 
-    connection.query("SELECT * FROM Trails WHERE type = 'WATER'", function(err, rows, fields) {
+    connection.query("SELECT * FROM Trails WHERE trail_type = 'WATER'", function(err, rows, fields) {
         if (!err && rows.length > 0) {
             console.log(rows);
             response.push({ "result": "success" });
