@@ -42,7 +42,7 @@ router.route("/trails/:tid")
     // Get a trail with that ID
     var response = [];
 
-    connection.query("SELECT * FROM Trails WHERE id = " + req.params.tid, function(err, rows, fields) {
+    connection.query("SELECT * FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {
         if (!err && rows.length > 0) {
             console.log(rows);
             response.push({ "result": "success" });
@@ -57,7 +57,7 @@ router.route("/trails/:tid")
 })
 .delete(function(req, res) {
     // Delete a trail with that ID
-    connection.query("DELETE FROM Trails WHERE id = " + req.params.tid, function(err, rows, fields) {
+    connection.query("DELETE FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {
         if (!err)
             res.json({ "message": "Deleted trail " + req.params.pid });
         else
@@ -183,7 +183,7 @@ router.route("/photos/:pid")
     // Get a photo with that ID
     var response = [];
 
-    connection.query("SELECT * FROM Photographs WHERE id = " + req.params.pid, function(err, rows, fields) {
+    connection.query("SELECT * FROM Photographs WHERE pid = " + req.params.pid, function(err, rows, fields) {
         if (!err && rows.length > 0) {
             console.log(rows);
             response.push({ "result": "success" });
