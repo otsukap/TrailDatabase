@@ -57,16 +57,20 @@ router.route("/trails")
     // Create a trail
 	var response = [];
 
+    if (req.body.trail_type == 'LAND'){
+        if ( typeof req.body.surface_type == 'undefined' )
+            response.push({ "result": "error", "msg": "Please fill out all fields" });
+    } else if (req.body.trail_type == 'WATER') {
+        if (typeof req.body.waterbody_type == 'undefined' )
+            response.push({ "result": "error", "msg": "Please fill out all fields" });
+    }
+
     if (
             typeof req.body.name !== 'undefined' &&
             typeof req.body.lat !== 'undefined' &&
             typeof req.body.lng !== 'undefined' &&
             typeof req.body.gps_data !== 'undefined' &&
-            typeof req.body.trail_type !== 'undfined' &&
-            typeof req.body.waterbody_type !== 'undefined' &&
-            typeof req.body.surface_type !== 'undefined' &&
-            typeof req.body.elevation_change !== 'undefined' &&
-            typeof req.body.depth !== 'undefined'
+            typeof req.body.trail_type !== 'undfined'
        ) {
         connection.query("INSERT INTO Trails (name, lat, lng, trail_type, gps_data, surface_type, elevation_change, depth, waterbody_type) VALUES (?,?,?,?,?,?,?,?,?)",
                 [req.body.name, req.body.lat, req.body.lng, req.body.trail_type, req.body.gps_data, req.body.surface_type, req.body.elevation_change, req.body.depth, req.body.waterbody_type],
