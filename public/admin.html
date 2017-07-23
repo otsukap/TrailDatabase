@@ -56,10 +56,20 @@
 					</div>
 				  </div>
 				  <div class="form-group">
-					<label for="inputSurface" class="col-sm-2 control-label">Surface type</label>
+					<label for="inputName" class="col-sm-2 control-label">Trail Type</label>
 					<div class="col-sm-6">
-					  <input class="form-control" id="inputSurface" placeholder="Surface Type">
+					  <div class="btn-group" id="trailType">
+					  <button type="button" class="btn btn-default dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Type <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu">
+						<li><a href="#" value="land">Land Trail</a></li>
+						<li><a href="#" value="water">Water Trail</a></li>
+					  </ul>
+					  </div>
 					</div>
+				  </div>
+				  <div class="form-group" id="surfaceForm">
 				  </div>
 				  <div class="form-group">
 					<label for="inputGPSData" class="col-sm-2 control-label">GPS Data File (.gpx files only)</label>
