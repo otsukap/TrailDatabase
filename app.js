@@ -2,6 +2,9 @@ var http    = require("http");
 var express	= require("express");
 var mysql	= require("mysql");
 var bodyParser	= require("body-parser");
+var multer = require("multer");
+var path = require("path");
+var crypto = require("crypto");
 
 // Connect to mysql
 var connection = mysql.createConnection({
@@ -119,9 +122,28 @@ router.route("/trails/:tid")
     });
 });
 
-router.route("/photos")
-.post(function(req, res) {
-    // Create a photograph
+const storage = multer.diskStorage({
+	destination: "./public/photos",
+	filename: function (req, file, cb){
+		crypto.pseudoRandomBytes(16, function(err, raw) {
+			if (err) return cb(err);
+
+			cb(null, raw.toString("hex") + path.extname(file.originalname));
+		});
+	}
+});
+
+var upload = multer({ storage: storage });
+
+app.post("/api/photos", upload.single("photo"), function (req, res) {
+	console.log(req);
+	if (!req.file) {
+		console.log("No file received");
+		return res.send({ "result": "failure" });
+	} else {
+		console.log("File received");
+		return res.send({ "result": "success" });
+	}
 });
 
 router.route("/photos/:pid")
