@@ -8,6 +8,10 @@
     "body-parser": "^1.17.2",
     "express": "*",
     "http": "*",
-    "mysql": "*"
+    "mysql": "*",
+    "multer": "*",
+    "path": "*",
+    "crypto": "*",
+    "exif": "*"
   }
 }
