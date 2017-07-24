@@ -100,6 +100,41 @@
 			  Edit Trail Form 
 			  --------------------->
 			  <div role="tabpanel" class="tab-pane" id="editTrail" aria-labelledby="editTrailTab">
+			  <form class="form-horizontal" method="get" action="api/trails">
+				  <div class="form-group">
+					<div class="col-sm-2"></div><div class="col-sm-6"><h4>Edit a Trail</h4></div>
+				  </div>
+				  <div class="form-group">
+				    <div class="col-sm-2"></div><div class="col-sm-6"><h5><b>Search by</b></h5></div>
+				  </div>
+				  <div class="form-group">
+					<label for="inputName" class="col-sm-2 control-label">Name</label>
+					<div class="col-sm-6">
+					  <input class="form-control" id="inputName" name="name" placeholder="Name">
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label for="inputName" class="col-sm-2 control-label">Trail Type</label>
+					<div class="col-sm-6">
+					  <div class="btn-group" id="trailType">
+					  <button type="button" class="btn btn-default dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Type <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu">
+						<li><a href="#" value="land">Land Trail</a></li>
+						<li><a href="#" value="water">Water Trail</a></li>
+					  </ul>
+					  </div>
+					</div>
+				  </div>
+				  <div class="form-group" id="surfaceForm">
+				  </div>
+				  <div class="form-group">
+					<div class="col-sm-offset-2 col-sm-6">
+					  <button type="submit" class="btn btn-primary">Search</button>
+					</div>
+				  </div>
+				</form>
 			  </div>
 			  <!--------------------
 			  Delete Trail Form 

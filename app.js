@@ -39,9 +39,22 @@ app.set("json spaces", 2);
 
 router.route("/trails")
 .get(function(req, res) {
+	console.log(req.query.name)
     var response = [];
-
-    connection.query("SELECT * FROM Trails", function(err, rows, fields) {
+	
+	if (typeof req.query.name != 'undefined' && typeof req.query.trail_type == 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + "'";
+	} else if (typeof req.query.trail_type != 'undefined' && typeof req.query.name == 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.param.trail_type + "'";
+	} else if (typeof req.query.name != 'undefined' && typeof req.query.trail_type != 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + 
+		"' AND trail_type = '" + req.query.trail_type + "'";
+	} else {
+		mysqlStatement = "SELECT * FROM Trails";
+	}
+	
+    connection.query(mysqlStatement, function(err, rows, fields) {
+		console.log(mysqlStatement)
         if(!err && rows.length >0) {
             console.log(rows);
             response.push({ "result": "success" });
@@ -50,6 +63,7 @@ router.route("/trails")
         } else {
             response.push({ "result": "failure" });
             response.push({ "error": err });
+            res.json(response); //added this to get a response
         }
     });
 })
