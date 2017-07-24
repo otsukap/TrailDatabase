@@ -136,8 +136,14 @@ const storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-app.post("/api/photos/:tid", upload.single("photo"), function (req, res) {
+// Create a photograph. Must have URL parameter tid to specify which trail to associate it with
+app.post("/api/photos", upload.single("photo"), function (req, res) {
 	var response = [];
+
+	if (req.query.tid == "undefined"){
+		response.push({ "result": failure });
+		response.push({ "err": "Must specify a trail id as a URL parameter" });
+	}
 
 	if (!req.file) {
 		console.log("No file received");
@@ -168,7 +174,7 @@ app.post("/api/photos/:tid", upload.single("photo"), function (req, res) {
 						"lat": lat,
 						"lng": lng,
 						"date": date,
-						"tid": req.params.tid
+						"tid": req.query.tid
 					};
 
 					connection.query("INSERT INTO Photographs SET ?", photograph, function (err, rows) {
