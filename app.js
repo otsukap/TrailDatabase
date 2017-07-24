@@ -5,6 +5,7 @@ var bodyParser	= require("body-parser");
 var multer = require("multer");
 var path = require("path");
 var crypto = require("crypto");
+var exif = require("exif").ExifImage;
 
 // Connect to mysql
 var connection = mysql.createConnection({
@@ -135,14 +136,59 @@ const storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-app.post("/api/photos", upload.single("photo"), function (req, res) {
-	console.log(req);
+app.post("/api/photos/:tid", upload.single("photo"), function (req, res) {
+	var response = [];
+
 	if (!req.file) {
 		console.log("No file received");
-		return res.send({ "result": "failure" });
+		response.push({ "result": "failure" });
+		response.push({ "err": "No file recieved" });
+		res.send(response);
 	} else {
 		console.log("File received");
-		return res.send({ "result": "success" });
+		try {
+			new exif({ image: req.file.path }, function (err, exifData) {
+				if (err) {
+					console.log("Error" + err.message);
+					response.push({ "result": "failure" });
+					response.push({ "err" : err.message });
+					res.send(response);
+				}
+				else {
+					var lat_arr = exifData.gps.GPSLatitude;
+					var lng_arr = exifData.gps.GPSLongitude;
+					var lat = lat_arr[0] + lat_arr[1]/60.0 + lat_arr[2]/3600.0;
+					var lng = lng_arr[0] + lng_arr[1]/60.0 + lng_arr[2]/3600.0;
+					var datetime = exifData.exif.DateTimeOriginal;
+					var date = datetime.slice(0,10).split(":").join("-")
+					console.log("Exif data - " + "Lat: " + lat + ", Lng: " + lng + " Date: " + date);
+
+					const photograph = {
+						"file_path": req.file.filename,
+						"lat": lat,
+						"lng": lng,
+						"date": date,
+						"tid": req.params.tid
+					};
+
+					connection.query("INSERT INTO Photographs SET ?", photograph, function (err, rows) {
+						if (err) {
+							response.push({ "result": "failure" });
+							response.push({ "err": err });
+							res.send(response);
+						} else {
+							response.push({ "result": "success" });
+							res.send(response);
+						}
+					});
+
+				}
+			});
+		} catch (error) {
+			console.log("Error: " + error.message);
+			response.push({ "result": "failure" });
+			response.push({ "err": error.message });
+		}
 	}
 });
 
