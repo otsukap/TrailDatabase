@@ -79,11 +79,22 @@ router.route("/trails")
             typeof req.body.name !== 'undefined' &&
             typeof req.body.lat !== 'undefined' &&
             typeof req.body.lng !== 'undefined' &&
-            typeof req.body.gps_data !== 'undefined' &&
             typeof req.body.trail_type !== 'undfined'
        ) {
-        connection.query("INSERT INTO Trails (name, lat, lng, trail_type, gps_data, surface_type, elevation_change, depth, waterbody_type) VALUES (?,?,?,?,?,?,?,?,?)",
-                [req.body.name, req.body.lat, req.body.lng, req.body.trail_type, req.body.gps_data, req.body.surface_type, req.body.elevation_change, req.body.depth, req.body.waterbody_type],
+
+        const trail = {
+        	trail_type: req.body.trail_type,
+        	name: req.body.name,
+        	lat: req.body.lat,
+        	lng: req.body.lng,
+        	surface_type: req.body.surface_type,
+        	elevation_change: req.body.elevation_change,
+        	depth: req.body.depth,
+        	waterbody_type: req.body.waterbody_type
+        };
+
+        connection.query("INSERT INTO Trails SET ?",
+                trail,
                 function(err, result) {
                     if (!err) {
                         if (result.affectedRows != 0)
@@ -122,7 +133,6 @@ router.route("/trails/:tid")
 .put(function(req, res) {
 	// Update a trail with that ID
 	response = [];
-	console.log(req.body.trail_type);
 
     if (req.body.trail_type == 'LAND'){
         if (
