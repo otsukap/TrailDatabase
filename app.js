@@ -41,19 +41,20 @@ app.use("/api", router);
 app.locals.pretty = true;
 app.set("json spaces", 2);
 
+// Get trails
 router.route("/trails")
 .get(function(req, res) {
 	console.log(req.query.name)
     var response = [];
 	
-	if (typeof req.query.name != 'undefined' && typeof req.query.trail_type == 'undefined') {
+	if (req.query.name != '' && typeof req.query.trail_type == 'undefined') {
 		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + "'";
-	} else if (typeof req.query.trail_type != 'undefined' && typeof req.query.name == 'undefined') {
+	} else if (typeof req.query.trail_type != 'undefined' && req.query.name == '') {
 		mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.param.trail_type + "'";
-	} else if (typeof req.query.name != 'undefined' && typeof req.query.trail_type != 'undefined') {
+	} else if (req.query.name != '' && typeof req.query.trail_type != 'undefined') {
 		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + 
 		"' AND trail_type = '" + req.query.trail_type + "'";
-	} else {
+	} else if (req.query.name == '' && typeof req.query.trail_type == 'undefined') {
 		mysqlStatement = "SELECT * FROM Trails";
 	}
 	

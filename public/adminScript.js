@@ -41,7 +41,23 @@ $('#trailType li a').click(function(){
 		})
 	})
 })
+
 //
+// Get request
+//
+$('#searchTrailAdmin').submit(function(e){
+	console.log("form has been submitted")
+	$.ajax({
+		type: "GET",
+		url: "api/trails",
+		data: $('#searchTrailAdmin').serialize(),
+		success: function(res){
+			console.log(res)
+		}
+	})
+	
+	e.preventDefault();
+});
 
 
 //
