@@ -36,9 +36,9 @@
         <div class="col-md-12">
 		  <!-- Search form -->
           <ul class="nav nav-tabs" role="tablist">
-			  <li id="addTrailTab" role="presentation" class="active"><a href="#addTrail" aria-controls="addTrail" role="tab" data-toggle="tab">Add trail</a></li>
-			  <li id="editTrailTab" role="presentation"><a href="#editTrail" aria-controls="editTrail" role="tab" data-toggle="tab">Edit trail</a></li>
-			  <li id="deleteTrailTab" role="presentation"><a href="#deleteTrail" aria-controls="deleteTrail" role="tab" data-toggle="tab">Delete trail</a></li>
+			  <li id="addTrailTab" role="presentation" class="active"><a href="#addTrail" aria-controls="addTrail" role="tab" data-toggle="tab">Add Trail</a></li>
+			  <li id="editTrailTab" role="presentation"><a href="#editTrail" aria-controls="editTrail" role="tab" data-toggle="tab">Edit/Delete Trail</a></li>
+			  <!-- <li id="deleteTrailTab" role="presentation"><a href="#deleteTrail" aria-controls="deleteTrail" role="tab" data-toggle="tab">Delete trail</a></li> -->
 		  </ul>
 		  <div class="tab-content">
 			  <!--------------------
@@ -47,27 +47,22 @@
 			  <div role="tabpanel" class="tab-pane active" id="addTrail" aria-labelledby="addTrailTab">
 				<form class="form-horizontal">
 				  <div class="form-group">
-					<div class=col-sm-2></div><div class="col-sm-6"><h4>Add a New Trail</h4></div>
+					<div class="col-sm-2"></div><div class="col-sm-6"><h4>Add a New Trail</h4></div>
 				  </div>
 				  <div class="form-group">
 					<label for="inputName" class="col-sm-2 control-label">Name</label>
 					<div class="col-sm-6">
-					  <input class="form-control" id="inputName" placeholder="Name">
+					  <input class="form-control" id="inputName" name = "name" placeholder="Name">
 					</div>
 				  </div>
 				  <div class="form-group">
-					<label for="inputName" class="col-sm-2 control-label">Trail Type</label>
-					<div class="col-sm-6">
-					  <div class="btn-group" id="trailType">
-					  <button type="button" class="btn btn-default dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Type <span class="caret"></span>
-					  </button>
-					  <ul class="dropdown-menu">
-						<li><a href="#" value="land">Land Trail</a></li>
-						<li><a href="#" value="water">Water Trail</a></li>
-					  </ul>
+					<label for="inputTrail" class="col-sm-2 control-label">Trail Type</label>
+					  <div class="col-sm-6">
+						  <select class="form-control" id="inputTrail" name="trail_type">
+							<option value="land">Land Trail</option>
+							<option value="water">Water Trail</option>
+						  </select>
 					  </div>
-					</div>
 				  </div>
 				  <div class="form-group" id="surfaceForm">
 				  </div>
@@ -114,20 +109,13 @@
 					</div>
 				  </div>
 				  <div class="form-group">
-					<label for="inputName" class="col-sm-2 control-label">Trail Type</label>
-					<div class="col-sm-6">
-					  <div class="btn-group" id="trailType">
-					  <button type="button" class="btn btn-default dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Type <span class="caret"></span>
-					  </button>
-					  <ul class="dropdown-menu">
-						<li><a href="#" value="land">Land Trail</a></li>
-						<li><a href="#" value="water">Water Trail</a></li>
-					  </ul>
-					  </div>
-					</div>
+				  <label for="inputTrail" class="col-sm-2 control-label">Trail</label>
+				  <div class="col-sm-6">
+					  <select class="form-control" id="inputTrail" name="trail_type">
+						<option value="land">Land Trail</option>
+						<option value="water">Water Trail</option>
+					  </select>
 				  </div>
-				  <div class="form-group" id="surfaceForm">
 				  </div>
 				  <div class="form-group">
 					<div class="col-sm-offset-2 col-sm-6">
@@ -135,12 +123,14 @@
 					</div>
 				  </div>
 				</form>
+				<div id="editResults" class="col-sm-12"></div>
+				</div>
 			  </div>
 			  <!--------------------
 			  Delete Trail Form 
 			  --------------------->
-			  <div role="tabpanel" class="tab-pane" id="deleteTrail" aria-labelledby="deleteTrailTab">
-			  </div>
+			  <!-- <div role="tabpanel" class="tab-pane" id="deleteTrail" aria-labelledby="deleteTrailTab">
+			  </div> -->
 		  </div>
         </div>
       </div>

@@ -50,13 +50,14 @@ router.route("/trails")
 	if (req.query.name != '' && typeof req.query.trail_type == 'undefined') {
 		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + "'";
 	} else if (typeof req.query.trail_type != 'undefined' && req.query.name == '') {
-		mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.param.trail_type + "'";
+		mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
 	} else if (req.query.name != '' && typeof req.query.trail_type != 'undefined') {
 		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + 
 		"' AND trail_type = '" + req.query.trail_type + "'";
 	} else if (req.query.name == '' && typeof req.query.trail_type == 'undefined') {
 		mysqlStatement = "SELECT * FROM Trails";
 	}
+	console.log(mysqlStatement)
 	
     connection.query(mysqlStatement, function(err, rows, fields) {
 		console.log(mysqlStatement)
