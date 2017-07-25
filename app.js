@@ -77,10 +77,16 @@ router.route("/trails")
 	var response = [];
 
     if (req.body.trail_type == 'LAND'){
-        if ( typeof req.body.surface_type == 'undefined' )
+        if (
+        	typeof req.body.surface_type == 'undefined' &&
+        	typeof req.body.elevation_change == 'undefined'
+        	)
             response.push({ "result": "error", "msg": "Please fill out all fields" });
     } else if (req.body.trail_type == 'WATER') {
-        if (typeof req.body.waterbody_type == 'undefined' )
+        if (
+        	typeof req.body.waterbody_type == 'undefined' &&
+        	typeof req.body.depth == 'undefined'
+        	)
             response.push({ "result": "error", "msg": "Please fill out all fields" });
     }
 
@@ -88,11 +94,22 @@ router.route("/trails")
             typeof req.body.name !== 'undefined' &&
             typeof req.body.lat !== 'undefined' &&
             typeof req.body.lng !== 'undefined' &&
-            typeof req.body.gps_data !== 'undefined' &&
             typeof req.body.trail_type !== 'undfined'
        ) {
-        connection.query("INSERT INTO Trails (name, lat, lng, trail_type, gps_data, surface_type, elevation_change, depth, waterbody_type) VALUES (?,?,?,?,?,?,?,?,?)",
-                [req.body.name, req.body.lat, req.body.lng, req.body.trail_type, req.body.gps_data, req.body.surface_type, req.body.elevation_change, req.body.depth, req.body.waterbody_type],
+
+        const trail = {
+        	trail_type: req.body.trail_type,
+        	name: req.body.name,
+        	lat: req.body.lat,
+        	lng: req.body.lng,
+        	surface_type: req.body.surface_type,
+        	elevation_change: req.body.elevation_change,
+        	depth: req.body.depth,
+        	waterbody_type: req.body.waterbody_type
+        };
+
+        connection.query("INSERT INTO Trails SET ?",
+                trail,
                 function(err, result) {
                     if (!err) {
                         if (result.affectedRows != 0)
@@ -127,6 +144,68 @@ router.route("/trails/:tid")
             res.json(response);
         }
     });
+})
+.put(function(req, res) {
+	// Update a trail with that ID
+	response = [];
+
+    if (req.body.trail_type == 'LAND'){
+        if (
+        	typeof req.body.surface_type == 'undefined' &&
+        	typeof req.body.elevation_change == 'undefined'
+        	) {
+        	response.push({ "result": "error", "msg": "Please fill out all fields" });
+        	res.json(response);
+        }
+    } else if (req.body.trail_type == 'WATER') {
+        if (
+        	typeof req.body.waterbody_type == 'undefined' &&
+        	typeof req.body.depth == 'undefined'
+        	) {
+        	response.push({ "result": "error", "msg": "Please fill out all fields" });
+        	res.json(response);
+        }
+    }
+
+    console.log(req.body.name);
+    console.log(req.body.lat);
+    console.log(req.body.lng);
+
+    if (
+            typeof req.body.name !== 'undefined' &&
+            typeof req.body.lat !== 'undefined' &&
+            typeof req.body.lng !== 'undefined' 
+       ) {
+        const trail = {
+        	name: req.body.name,
+        	lat: req.body.lat,
+        	lng: req.body.lng,
+        	surface_type: req.body.surface_type,
+        	elevation_change: req.body.elevation_change,
+        	depth: req.body.depth,
+        	waterbody_type: req.body.waterbody_type
+        };
+
+        connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.params.tid], function (err, result) {
+        	if (err) {
+        		response.push({ "result": "failure" });
+        		response.push({ "err": err });
+        		res.json(response);
+        	} else {
+        		if (result.affectedRows != 0){
+        			response.push({ "result": "success" });
+        			res.json(response);
+        		} else {
+        			response.push({ "result": "failure" });
+        			res.json(response);
+        		}
+        	}
+        });
+
+    } else {
+        response.push({ "result": "error", "msg": "Please fill out all fields" });
+        res.json(response);
+    }
 })
 .delete(function(req, res) {
     // Delete a trail with that ID
