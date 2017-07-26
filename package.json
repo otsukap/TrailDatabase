@@ -12,6 +12,8 @@
     "multer": "*",
     "path": "*",
     "crypto": "*",
-    "exif": "*"
+    "exif": "*",
+    "fs": "*",
+    "gpx-parse": "*"
   }
 }
