@@ -50,7 +50,6 @@ router.route("/trails")
 	console.log(req.query.name)
     var response = [];
 	
-<<<<<<< HEAD
 	// If admin is searching
 	if (req.query.user_type == 'admin'){
 		console.log("user type: " + req.query.user_type)
@@ -90,17 +89,7 @@ router.route("/trails")
 		} else if (req.query.boundaries == '' && typeof req.query.trail_type != 'undefined') {
 			mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
 		}
-=======
-	if (req.query.name != '' && typeof req.query.trail_type == 'undefined') {
-		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + "'";
-	} else if (typeof req.query.trail_type != 'undefined' && req.query.name == '') {
-		mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
-	} else if (req.query.name != '' && typeof req.query.trail_type != 'undefined') {
-		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + 
-		"' AND trail_type = '" + req.query.trail_type + "'";
-	} else if (req.query.name == '' && typeof req.query.trail_type == 'undefined') {
-		mysqlStatement = "SELECT * FROM Trails";
->>>>>>> 66fd046790c6b1d6a7683531eb47bcada2254e63
+
 	}
 	console.log(mysqlStatement)
 	
@@ -153,10 +142,17 @@ router.route("/trails")
             trail,
             function(err, result) {
                 if (!err) {
-                    if (result.affectedRows != 0)
+                    if (result.affectedRows != 0){ 
+                        console.log(result)
+<<<<<<< HEAD
+                        response.push({ "result": "success" });
+=======
                         response.push({ "result": "successs" });
-                    else
+                        response.push({ "id": result.insertId });
+>>>>>>> 0f4831e845629c693772706d2747523078ad733a
+                    } else{
                         response.push({ "result": "failure" });
+                    }
                     res.json(response);
                 } else {
                     res.status(400).send(err);
@@ -167,10 +163,7 @@ router.route("/trails")
 router.route("/trails/:tid")
 .get(function(req, res) {
     // Get a trail with that ID
-<<<<<<< HEAD
 	//res.sendFile(path.join(__dirname + '/public/details.html'));
-=======
->>>>>>> 66fd046790c6b1d6a7683531eb47bcada2254e63
     var response = [];
 
     connection.query("SELECT * FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {
@@ -258,11 +251,11 @@ const gpxStorage = multer.diskStorage({
 
 var gpxUpload = multer({ storage: gpxStorage });
 
-// Upload GPX data. Must have URL parameter tid to specify which trail to associate it with
-app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
+// Upload GPX data. 
+app.post("/api/gpx/:tid", gpxUpload.single("gpx"), function (req, res) {
     var response = [];
 
-    if (req.query.tid === undefined){
+    if (req.params.tid === undefined){
         response.push({ "result": "failure" });
         response.push({ "err": "Must specify a trail id as a URL parameter" });
         res.json(response);
@@ -300,7 +293,7 @@ app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
                 gps_data: gpx
             }
 
-            connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.query.tid], function(err, result){
+            connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.params.tid], function(err, result){
                 if (err) {
                     response.push({ "result": "failure" });
                     response.push({ "err": err });
