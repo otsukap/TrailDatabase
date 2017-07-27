@@ -48,41 +48,17 @@ app.set("json spaces", 2);
 router.route("/trails")
 .get(function(req, res) {
 	console.log(req.query.name)
-	console.log(req.query.user_type)
     var response = [];
 	
-	if (req.query.user_type == 'admin'){
-		console.log(req.query.user_type)
-		if (req.query.name != '' && typeof req.query.trail_type == 'undefined') {
-			mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + "'";
-		} else if (typeof req.query.trail_type != 'undefined' && req.query.name == '') {
-			mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
-		} else if (req.query.name != '' && typeof req.query.trail_type != 'undefined') {
-			mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + 
-			"' AND trail_type = '" + req.query.trail_type + "'";
-		} else if (req.query.name == '' && typeof req.query.trail_type == 'undefined') {
-			mysqlStatement = "SELECT * FROM Trails";
-		}
-	}
-	else if (req.query.user_type == 'user'){
-		console.log(req.query.user_type)
-		if (req.query.boundaries != '' && typeof req.query.trail_type == 'undefined'){
-			console.log(req.query.boundaries)
-			numBoundaries = JSON.parse(req.query.boundaries)
-			left = numBoundaries[0]
-			bottom = numBoundaries[1]
-			right = numBoundaries[2]
-			top = numBoundaries[3]
-			mysqlStatement = "SELECT * FROM Trails WHERE lat > " + bottom + " AND lat < " + top + " AND lng > " + left + " AND lng < " + right;
-		} else if (req.query.boundaries != '' && typeof req.query.trail_type != 'undefined') {
-			console.log(req.query.boundaries)
-			numBoundaries = JSON.parse(req.query.boundaries)
-			left = numBoundaries[0]
-			bottom = numBoundaries[1]
-			right = numBoundaries[2]
-			top = numBoundaries[3]
-			mysqlStatement = "SELECT * FROM Trails WHERE lat > " + bottom + " AND lat < " + top + " AND lng > " + left + " AND lng < " + right + " AND trail_type = '" + req.query.trail_type + "'";
-		}
+	if (req.query.name != '' && typeof req.query.trail_type == 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + "'";
+	} else if (typeof req.query.trail_type != 'undefined' && req.query.name == '') {
+		mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
+	} else if (req.query.name != '' && typeof req.query.trail_type != 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + 
+		"' AND trail_type = '" + req.query.trail_type + "'";
+	} else if (req.query.name == '' && typeof req.query.trail_type == 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails";
 	}
 	console.log(mysqlStatement)
 	
@@ -122,7 +98,7 @@ router.route("/trails")
             typeof req.body.name !== 'undefined' &&
             typeof req.body.lat !== 'undefined' &&
             typeof req.body.lng !== 'undefined' &&
-            typeof req.body.trail_type !== 'undefined'
+            typeof req.body.trail_type !== 'undfined'
        ) {
 
         const trail = {
@@ -158,7 +134,6 @@ router.route("/trails")
 router.route("/trails/:tid")
 .get(function(req, res) {
     // Get a trail with that ID
-	res.sendFile(path.join(__dirname + '/public/details.html'));
     var response = [];
 
     connection.query("SELECT * FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {
@@ -263,8 +238,8 @@ var gpxUpload = multer({ storage: gpxStorage });
 app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
     var response = [];
 
-    if (req.query.tid == "undefined"){
-        response.push({ "result": failure });
+    if (req.query.tid === undefined){
+        response.push({ "result": "failure" });
         response.push({ "err": "Must specify a trail id as a URL parameter" });
         res.send(response);
     }
@@ -343,9 +318,10 @@ var upload = multer({ storage: storage });
 app.post("/api/photos", upload.single("photo"), function (req, res) {
 	var response = [];
 
-	if (req.query.tid == "undefined"){
-		response.push({ "result": failure });
+	if (req.query.tid === undefined){
+		response.push({ "result": "failure" });
 		response.push({ "err": "Must specify a trail id as a URL parameter" });
+        res.send(response);
 	}
 
 	if (!req.file) {
