@@ -45,6 +45,10 @@ input[type="file"]{
 	margin: 4px;
 }
 
+#leaveComment{
+	margin-left: 16px;
+}
+
 .inputPicture,
 .pictureButtons {
 	margin-bottom: 5px !important;

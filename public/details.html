@@ -47,13 +47,29 @@
 				<div class="trailImage" style="background-image:url('images/20161022_125955.jpg');"></div>
 				<div class="trailImage" style="background-image:url('images/20161022_135449.jpg');"></div>
 			</div>
+			<div id="commentContainer">
+			<!-- Pull all comments here -->
+			Comment!
+				<table class="table">
+				</table>
+			</div>
         </div>
         <div class="col-md-6">
 		  <!-- Map container -->
           <div id="map" class="map"></div>
        </div>
+	   <form class="form-horizontal col-md-12" method="post" id="leaveComment">
+		  <div class="form-group">
+			  <label for="user">Leave a comment about TRAIL NAME</label>
+			  <input class="form-control" id="user" name="user" placeholder="Your name">
+		  </div>
+		   <div class="form-group">
+			  <textarea class="form-control" rows="5" id="comment" placeholder="Comment"></textarea>
+			</div>
+			  <button type="submit" class="btn btn-primary">Submit</button>
+		</form>
       </div>
-
+	</div>
 	
 	<!-- Javascript files -->
 	<script type="text/javascript" src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>

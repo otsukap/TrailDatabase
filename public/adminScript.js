@@ -1,45 +1,43 @@
 //
 // Form functions
 //
-$('#trailType li a').click(function(){
-	$('#trailType .btn:first-child').html($(this).text() + " <span class='caret'></span>");
-	$('#trailType .btn:first-child').val($(this).text());
+$('#inputTrail').click(function(){
 	
 	$('#surfaceForm').empty()
 	
-	if ($(this).text() == "Land Trail"){
-		$('#surfaceForm').append("<label for='inputSurface' class='col-sm-2 control-label'>Surface type</label><div class='col-sm-6'>" + 
-		"<div class='btn-group' id='surfaceType'><button type='button' class='btn btn-default dropdown-toggle'  data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Type <span class='caret'></span></button>" + 
-		"<ul class='dropdown-menu'>" + 
-		"<li><a href='#' value='dirt'>Dirt</a></li>" + 
-		"<li><a href='#' value='gravel'>Gravel</a></li>" + 
-		"<li><a href='#' value='asphalt'>Asphalt</a></li>" + 
-		"<li><a href='#' value='various'>Various</a></li>" + 
-		"</ul></div>")
+	if ($(this).val() == "land"){
+		$('#surfaceForm').append("<label for='inputSurface' class='col-sm-2 control-label'>Surface Type</label><div class='col-sm-6'>" + 
+						  "<select class='form-control' id='inputSurface' name='surface_type'>" +
+							"<option value='dirt'>Dirt</option>" +
+							"<option value='gravel'>Gravel</option>" +
+							"<option value='asphalt'>Asphalt</option>" +
+							"<option value='various'>Various</option>" +
+						  "</select></div>")
 	}
-	else if ($(this).text() == "Water Trail"){
-		$('#surfaceForm').append("<label for='inputSurface' class='col-sm-2 control-label'>Body type</label><div class='col-sm-6'>" + 
-		"<div class='btn-group' id='bodyType'><button type='button' class='btn btn-default dropdown-toggle'  data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Type <span class='caret'></span></button>" + 
-		"<ul class='dropdown-menu'>" + 
-		"<li><a href='#' value='river'>River</a></li>" + 
-		"<li><a href='#' value='shore'>Beach/shore</a></li>" + 
-		"<li><a href='#' value='lake'>Lake</a></li>" + 
-		"</ul></div>")
+	else if ($(this).val() == "water"){
+		$('#surfaceForm').append("<label for='inputSurface' class='col-sm-2 control-label'>Body Type</label><div class='col-sm-6'>" + 
+						  "<select class='form-control' id='inputSurface' name='waterbody_type'>" +
+							"<option value='river'>River</option>" +
+							"<option value='shore'>Shore</option>" +
+							"<option value='lake'>Lake</option>" +
+						  "</select></div>")
+		
+		
 	}
 	
-	$('#surfaceType').ready(function(){
-		$('#surfaceType li a').click(function(){
-			$('#surfaceType .btn:first-child').html($(this).text() + " <span class='caret'></span>");
-			$('#surfaceType .btn:first-child').val($(this).text());
-		})
-	})
-	//
-	$('#bodyType').ready(function(){
-		$('#bodyType li a').click(function(){
-			$('#bodyType .btn:first-child').html($(this).text() + " <span class='caret'></span>");
-			$('#bodyType .btn:first-child').val($(this).text());
-		})
-	})
+	// $('#surfaceType').ready(function(){
+		// $('#surfaceType li a').click(function(){
+			// $('#surfaceType .btn:first-child').html($(this).text() + " <span class='caret'></span>");
+			// $('#surfaceType .btn:first-child').val($(this).text());
+		// })
+	// })
+	// //
+	// $('#bodyType').ready(function(){
+		// $('#bodyType li a').click(function(){
+			// $('#bodyType .btn:first-child').html($(this).text() + " <span class='caret'></span>");
+			// $('#bodyType .btn:first-child').val($(this).text());
+		// })
+	// })
 });
 
 //
@@ -83,7 +81,7 @@ function searchResults(results){
 
 function editForms(results, nResults){
 	$('#editResults .panel-body').each(function(i, obj){
-		$(this).append("<div value=''>" + results[1].rows[i].name + ", " + results[1].rows[i].trail_type + ", " + results[1].rows[i].surface_type + "<br><br><button type='button' class='btn btn-danger delete' value=" + results[1].rows[i].tid + ">Delete trail</button></div>")
+		$(this).append("<div>" + results[1].rows[i].name + ", " + results[1].rows[i].trail_type + ", " + results[1].rows[i].surface_type + "<br><br><button type='button' class='btn btn-danger delete' value=" + results[1].rows[i].tid + ">Delete trail</button></div>")
 	});
 	
 	//
@@ -102,7 +100,6 @@ function editForms(results, nResults){
 	});
 }
 
-
 //
 // Get request
 //
@@ -111,7 +108,24 @@ $('#searchTrailAdmin').submit(function(e){
 	$.ajax({
 		type: "GET",
 		url: "api/trails",
-		data: $('#searchTrailAdmin').serialize(),
+		data: $('#searchTrailAdmin').serialize() + "&user_type=admin",
+		success: function(res){
+			console.log(res)
+			searchResults(res)
+		}
+	});
+	e.preventDefault();
+});
+
+//
+// Post request
+//
+$('#addTrailAdmin').submit(function(e){
+	console.log("form has been submitted")
+	$.ajax({
+		type: "POST",
+		url: "api/trails",
+		data: $('#addTrailAdmin').serialize(),
 		success: function(res){
 			console.log(res)
 			searchResults(res)
@@ -119,7 +133,6 @@ $('#searchTrailAdmin').submit(function(e){
 	})
 	e.preventDefault();
 });
-
 
 //
 // Put gpx file name in input box
