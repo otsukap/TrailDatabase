@@ -225,13 +225,39 @@ router.route("/trails/:tid")
     });
 })
 .delete(function(req, res) {
-    // Delete a trail with that ID
-    connection.query("DELETE FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {
-        if (!err)
-            res.json({ "message": "Deleted trail " + req.params.tid });
-        else
-            res.json({ "message": "Error deleting trail " + req.params.tid + ": " + err });
+    // Delete a trail with that ID, and comments/pictures that reference that trail
+    var response = [];
+
+    // Delete all comments associated with this trail
+    connection.query("DELETE FROM Comments WHERE tid = " + req.params.tid, function(err, rows, fields) {
+        if (err) {
+            response.push({ "result": "failure" });
+            response.push({ "err": "Error deleting comments"} );
+            res.json(response);
+        }
     });
+
+    // Delete all pictures associated with this trail
+    connection.query("DELETE FROM Photographs WHERE tid = " + req.params.tid, function(err, rows, fields) {
+        if (err) {
+            response.push({ "result": "failure" });
+            response.push({ "err": "Error deleting pictures "});
+            res.json(response);
+        }
+    });
+
+    // Delete the trail itself
+    connection.query("DELETE FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {
+        if (!err) {
+            response.push({ "result": "success" });
+            response.push({ "message": "Deleted trail " + req.params.tid });
+        } else {
+            response.push({ "result": "failure" });
+            response.push({ "err": "Error deleting trail " + req.params.tid });
+            res.json(response);
+        }
+    });
+
 });
 
 const gpxStorage = multer.diskStorage({
@@ -327,11 +353,11 @@ const storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-// Create a photograph. Must have URL parameter tid to specify which trail to associate it with
-app.post("/api/photos", upload.array("photos", 100), function (req, res) {
+// Create a photograph.
+app.post("/api/photos/:tid", upload.array("photos", 100), function (req, res) {
 	var response = [];
 
-	if (req.query.tid === undefined){
+	if (req.params.tid === undefined){
 		response.push({ "result": "failure" });
 		response.push({ "err": "Must specify a trail id as a URL parameter" });
         res.json(response);
@@ -369,7 +395,7 @@ app.post("/api/photos", upload.array("photos", 100), function (req, res) {
                             "lat": lat,
                             "lng": lng,
                             "date": date,
-                            "tid": req.query.tid
+                            "tid": req.params.tid
                         };
 
                         connection.query("INSERT INTO Photographs SET ?", photograph, function (err, rows) {
@@ -448,8 +474,8 @@ router.route("/comments")
     if (
             typeof req.body.user !== "undefined" &&
             typeof req.body.rating !== "undefined" &&
-            typeof req.params.comment !== "undefined" &&
-            typeof req.params.tid !== "undefined"
+            typeof req.body.comment !== "undefined" &&
+            typeof req.body.tid !== "undefined"
        ) {
         connection.query("INSERT INTO Comments (user, rating, tid, comment) VALUES (?, ?, ?, ?)",
                     [req.body.user, req.body.rating, req.body.tid, req.body.comment],
