@@ -92,8 +92,8 @@ function refocusMap(coordinates){ // Coordinates in JSON
 	map.getView().setZoom(11);
 	var extent = map.getView().calculateExtent(map.getSize())
 	console.log(extent)
-	console.log(ol.proj.Projection.getCode())
-	//console.log(ol.proj.transformExtent(extent))
+	//console.log(ol.proj.Projection.getCode())
+	console.log(ol.proj.transformExtent(extent, ol.proj.get('EPSG:3857'), ol.proj.get('EPSG:4326')))
 }
 
 	  

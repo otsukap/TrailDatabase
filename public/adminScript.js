@@ -40,8 +40,85 @@ $('#trailType li a').click(function(){
 			$('#bodyType .btn:first-child').val($(this).text());
 		})
 	})
-})
+});
+
 //
+// Get search results for edit
+//
+function searchResults(results){
+		$('#editResults').empty()
+	
+	if (results[0].result == "failure"){
+		$('#editResults').append("<h4>Search returned no results</h4>")
+	}
+	else if ( results[0].result == "success"){
+		nResults = results[1].rows.length
+		$('#editResults').append("<h4>Search returned " + nResults + " results</h4>")
+		$('#editResults').append("<div class='panel-group' id='accordion' role='tablist' aria-multiselectable='true'></div>")
+		
+		
+		var i = 0;
+		name = results[1].rows[0].name
+		$('#editResults .panel-group').append("<div class='panel panel-default'>" + 
+		"<div class='panel-heading' role='tab' id='heading0'>" + 
+		"<h4 class='panel-title'>" + 
+		"<a role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse0' aria-expanded='true' aria-controls='collapse0'>" + 
+		name + "</a></h4></div>" + 
+		"<div id='collapse0' class='panel-collapse collapse in' role='tabpanel' aria-labelledby='heading0'>" + 
+		"<div class='panel-body'></div></div></div>")
+		for (i = 1; i < nResults; i++){
+			name = results[1].rows[i].name
+			$('#editResults .panel-group').append("<div class='panel panel-default'>" + 
+			"<div class='panel-heading' role='tab' id='heading'" + i + ">" + 
+			"<h4 class='panel-title'>" + 
+			"<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + i + "' aria-expanded='false' aria-controls='collapse" + i + "'>" + 
+			name + "</a></h4></div>" + 
+			"<div id='collapse" + i + "' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading" + i + "'>" + 
+			"<div class='panel-body'></div></div></div>")
+		}
+		
+		editForms(results, nResults);
+	}
+}
+
+function editForms(results, nResults){
+	$('#editResults .panel-body').each(function(i, obj){
+		$(this).append("<div value=''>" + results[1].rows[i].name + ", " + results[1].rows[i].trail_type + ", " + results[1].rows[i].surface_type + "<br><br><button type='button' class='btn btn-danger delete' value=" + results[1].rows[i].tid + ">Delete trail</button></div>")
+	});
+	
+	//
+	// Delete trail
+	//
+	$('#editResults .delete').on('click', function(e){
+		tid = $(this).val()
+		$.ajax({
+			type: "DELETE",
+			url: "api/trails/" + tid,
+			success: function(res){
+				console.log(res)
+			}
+		})
+		e.preventDefault();
+	});
+}
+
+
+//
+// Get request
+//
+$('#searchTrailAdmin').submit(function(e){
+	console.log("form has been submitted")
+	$.ajax({
+		type: "GET",
+		url: "api/trails",
+		data: $('#searchTrailAdmin').serialize(),
+		success: function(res){
+			console.log(res)
+			searchResults(res)
+		}
+	})
+	e.preventDefault();
+});
 
 
 //
@@ -71,5 +148,4 @@ $('#browsePicture input').change(function(){
 			$('.inputPicture:nth-child(' + c + ')').val(input.files[i].name)
 		}
 	})
-	
 });
