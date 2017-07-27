@@ -145,6 +145,7 @@ router.route("/trails")
                     if (result.affectedRows != 0){ 
                         console.log(result)
                         response.push({ "result": "successs" });
+                        response.push({ "id": result.insertId });
                     } else{
                         response.push({ "result": "failure" });
                     }
@@ -295,7 +296,6 @@ app.post("/api/gpx/:tid", gpxUpload.single("gpx"), function (req, res) {
                     res.json(response);
                 } else {
                     if (result.affectedRows != 0){
-                        response.push({ "id": result.insertId });
                         response.push({ "result": "success" });
                         res.json(response);
                     } else {
