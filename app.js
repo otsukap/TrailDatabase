@@ -144,7 +144,7 @@ router.route("/trails")
                 if (!err) {
                     if (result.affectedRows != 0){ 
                         console.log(result)
-                        response.push({ "result": "successs" });
+                        response.push({ "result": "success" });
                     } else{
                         response.push({ "result": "failure" });
                     }

@@ -135,9 +135,10 @@ $('#addTrailAdmin').submit(function(e){
 			// If adding trail successfull get gpx data
 			$.ajax({
 				type: "POST",
-				url: "api/gpx",
-				data: {"tid": tid},
+				url: "api/gpx/" + tid,
+				data: "gpx=gpx",
 				success: function(res){
+					console.log("tid in addtrailadmin is " + tid);
 					console.log(res)
 					console.log("THIS FUCKING WORKED OMFG");
 				}
