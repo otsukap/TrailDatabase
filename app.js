@@ -295,6 +295,7 @@ app.post("/api/gpx/:tid", gpxUpload.single("gpx"), function (req, res) {
                     res.json(response);
                 } else {
                     if (result.affectedRows != 0){
+                        response.push({ "id": result.insertId });
                         response.push({ "result": "success" });
                         res.json(response);
                     } else {
