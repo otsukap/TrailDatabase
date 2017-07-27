@@ -142,10 +142,12 @@ router.route("/trails")
             trail,
             function(err, result) {
                 if (!err) {
-                    if (result.affectedRows != 0)
+                    if (result.affectedRows != 0){ 
+                        console.log(result);
                         response.push({ "result": "successs" });
-                    else
+                    } else{
                         response.push({ "result": "failure" });
+                    }
                     res.json(response);
                 } else {
                     res.status(400).send(err);

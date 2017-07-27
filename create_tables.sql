@@ -3,10 +3,10 @@ USE trails_db;
 CREATE TABLE Trails (
         tid INT NOT NULL AUTO_INCREMENT,
         name VARCHAR(256) NOT NULL,
-        lat DECIMAL(10, 8) NOT NULL,
-        lng DECIMAL(11, 8) NOT NULL,
+        lat DECIMAL(10, 8),
+        lng DECIMAL(11, 8),
         gps_data TEXT,
-        trail_type TEXT,
+        trail_type TEXT NOT NULL,
         surface_type VARCHAR(64),
         elevation_change INT,
         depth INT,
