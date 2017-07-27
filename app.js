@@ -7,7 +7,8 @@ var path = require("path");
 var crypto = require("crypto");
 var exif = require("exif").ExifImage;
 var fs = require("fs");
-var gpxParse = require("gpx-parse");
+var toGeoJson = require("togeojson");
+var DOMParser = require('xmldom').DOMParser;
 
 // Connect to mysql
 var connection = mysql.createConnection({
@@ -240,6 +241,7 @@ app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
     if (req.query.tid == "undefined"){
         response.push({ "result": failure });
         response.push({ "err": "Must specify a trail id as a URL parameter" });
+        res.send(response);
     }
 
     if (!req.file) {
@@ -251,16 +253,50 @@ app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
         console.log("File received");
         console.log(req.file);
 
-        gpxParse.parseGpxFromFile(req.file.path, function(err, data) {
-            console.log(data);
+        fs.readFile(req.file.path, "utf8", function(err, data) {
+            var gpx = new DOMParser().parseFromString(data);
+
+            var converted = toGeoJson.gpx(gpx);
+            var coordinates = converted.features[0].geometry.coordinates;
+            var lat = coordinates[0][0];
+            var lng = coordinates[0][1];
+            var start_elevation = coordinates[0][2];
+            var end_elevation = coordinates[coordinates.length - 1][2];
+            var elevation_change = end_elevation - start_elevation;
+
+            console.log("GPX: " + gpx);
+            console.log("Lat: " + lat);
+            console.log("Lng: " + lng);
+            console.log("Elevation change: " + elevation_change);
+
+            const trail = {
+                lat: lat,
+                lng: lng,
+                elevation_change: elevation_change,
+                gps_data: gpx
+            }
+
+            connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.query.tid], function(err, result){
+                if (err) {
+                    response.push({ "result": "failure" });
+                    response.push({ "err": err });
+                    res.json(response);
+                } else {
+                    if (result.affectedRows != 0){
+                        response.push({ "result": "success" });
+                        res.json(response);
+                    } else {
+                        response.push({ "result": "failure" });
+                        res.json(response);
+                    }
+                }
+            });
 
             fs.unlink(req.file.path, function (err) {
                 if(err) throw err;
                 console.log("Deleted " + req.file.path);
-            })
+            });
         });
-
-        res.send(response);
     }
 
 });
