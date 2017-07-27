@@ -89,7 +89,7 @@ var map = new ol.Map({
 function refocusMap(coordinates){ // Coordinates in JSON
 	map.getView().setCenter(ol.proj.fromLonLat(
 		[coordinates.lng, coordinates.lat]));
-	map.getView().setZoom(11);
+	map.getView().setZoom(10);
 	var extent = map.getView().calculateExtent(map.getSize())
 	var viewBoundaries = ol.proj.transformExtent(extent, ol.proj.get('EPSG:3857'), ol.proj.get('EPSG:4326'))
 	return viewBoundaries
@@ -110,9 +110,35 @@ function searchResults(results){
 		$('#searchResults').append("<table class='table'><tbody></tbody></table>")
 		
 		for (i = 0; i < nResults; i++){
-			name = results[1].rows[i].name
-			trail_type = results[1].rows[i].trail_type
-			$('#searchResults tbody').append("<tr><td><b>" + name + "</b><br>" + trail_type + "</td></tr>")
+			name = results[1].rows[i].name;
+			trail_type = results[1].rows[i].trail_type;
+			tid = results[1].rows[i].tid;
+			surface_type = results[1].rows[i].surface_type;
+			surface_type_info = '';
+			elevation = results[1].rows[i].elevation;
+			elevation_info = '';
+			waterbody_type = results[1].rows[i].waterbody_type;
+			waterbody_type_info = '';
+			depth = results[1].rows[i].depth
+			depth_info = '';
+			if (surface_type != null) {
+				surface_type_info = "Surface type: " + surface_type + "<br>";
+			}
+			if (elevation != null) {
+				elevation_info = "Elevation: " + elevation + " meters<br>";
+			}
+			if (waterbody_type != null) {
+				waterbody_type_info = "Body type: " + waterbody_type + "<br>";
+			}
+			if (depth != null) {
+				depth_info = "Depth: " + depth + "<br>";
+			}
+			$('#searchResults tbody').append("<tr><td><b><a href='api/trails/" + tid + "'>" + name + "</a></b><br>" + "Trail type: " + trail_type + "<br>" + 
+			surface_type_info + 
+			elevation_info + 
+			waterbody_type_info + 
+			depth_info + 
+			"</td></tr>")
 		}
 	}
 }
@@ -133,28 +159,43 @@ var address;
 var coordinates;
 var boundaries;
 function initializeGeocoder(geocoder) {
-	address = $('#inputLocation').val() + ", FL";
-	console.log(address)
-	geocoder.geocode({'address': address}, function(results, status){
-		if (status === "OK"){
-			console.log("found " + address)
-			coordinates = results[0].geometry.location.toJSON()
-			boundaries = refocusMap(coordinates)
-			console.log("boundaries: " + boundaries)
-			$.ajax({
-				type: "GET",
-				url: "api/trails",
-				data: $('#searchTrail').serialize() + "&user_type=user" + 
-				"&boundaries=[" + boundaries + "]",
-				success: function(res){
-					console.log(res)
-					//searchResults(res)
-				}
-			})
-		}
-		else {
-			alert("Cannot find " + address)
-		}
-	});
+	if ($('#inputLocation').val() != ''){
+		address = $('#inputLocation').val() + ", FL";
+		console.log(address)
+		geocoder.geocode({'address': address}, function(results, status){
+			if (status === "OK"){
+				console.log("found " + address)
+				coordinates = results[0].geometry.location.toJSON()
+				boundaries = refocusMap(coordinates)
+				console.log("boundaries: " + boundaries)
+				$.ajax({
+					type: "GET",
+					url: "api/trails",
+					data: $('#searchTrail').serialize() + "&user_type=user" + 
+					"&boundaries=[" + boundaries + "]",
+					success: function(res){
+						console.log(res)
+						searchResults(res)
+					}
+				})
+			}
+			else {
+				alert("Cannot find " + address)
+			}
+		});
+	}
+	else {
+		console.log("there is no location");
+		$.ajax({
+			type: "GET",
+			url: "api/trails",
+			data: $('#searchTrail').serialize() + "&user_type=user" + 
+					"&boundaries=",
+			success: function(res){
+				console.log(res)
+				searchResults(res)
+			}
+		})
+	}
 }
 

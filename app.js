@@ -50,8 +50,10 @@ router.route("/trails")
 	console.log(req.query.user_type)
     var response = [];
 	
+	// If admin is searching
 	if (req.query.user_type == 'admin'){
-		console.log(req.query.user_type)
+		console.log("user type: " + req.query.user_type)
+		console.log("boundaries: " + req.query.boundaries)
 		if (req.query.name != '' && typeof req.query.trail_type == 'undefined') {
 			mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + "'";
 		} else if (typeof req.query.trail_type != 'undefined' && req.query.name == '') {
@@ -63,6 +65,7 @@ router.route("/trails")
 			mysqlStatement = "SELECT * FROM Trails";
 		}
 	}
+	// If regular user is searching
 	else if (req.query.user_type == 'user'){
 		console.log(req.query.user_type)
 		if (req.query.boundaries != '' && typeof req.query.trail_type == 'undefined'){
@@ -81,6 +84,10 @@ router.route("/trails")
 			right = numBoundaries[2]
 			top = numBoundaries[3]
 			mysqlStatement = "SELECT * FROM Trails WHERE lat > " + bottom + " AND lat < " + top + " AND lng > " + left + " AND lng < " + right + " AND trail_type = '" + req.query.trail_type + "'";
+		} else if (req.query.boundaries == '' && typeof req.query.trail_type == 'undefined') {
+			mysqlStatement = "SELECT * FROM Trails";
+		} else if (req.query.boundaries == '' && typeof req.query.trail_type != 'undefined') {
+			mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
 		}
 	}
 	console.log(mysqlStatement)
@@ -157,7 +164,7 @@ router.route("/trails")
 router.route("/trails/:tid")
 .get(function(req, res) {
     // Get a trail with that ID
-	res.sendFile(path.join(__dirname + '/public/details.html'));
+	//res.sendFile(path.join(__dirname + '/public/details.html'));
     var response = [];
 
     connection.query("SELECT * FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {

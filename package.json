@@ -6,14 +6,14 @@
   },
   "dependencies": {
     "body-parser": "*",
+    "crypto": "*",
+    "exif": "*",
     "express": "*",
+    "fs": "*",
+    "gpx-parse": "^0.10.4",
     "http": "*",
     "multer": "*",
     "mysql": "*",
-    "crypto": "*",
-    "exif": "*",
-    "fs": "*",
-    "gpx-parse": "*",
     "path": "*"
   }
 }
