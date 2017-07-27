@@ -50,6 +50,7 @@ router.route("/trails")
 	console.log(req.query.name)
     var response = [];
 	
+<<<<<<< HEAD
 	// If admin is searching
 	if (req.query.user_type == 'admin'){
 		console.log("user type: " + req.query.user_type)
@@ -89,7 +90,17 @@ router.route("/trails")
 		} else if (req.query.boundaries == '' && typeof req.query.trail_type != 'undefined') {
 			mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
 		}
-
+=======
+	if (req.query.name != '' && typeof req.query.trail_type == 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + "'";
+	} else if (typeof req.query.trail_type != 'undefined' && req.query.name == '') {
+		mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
+	} else if (req.query.name != '' && typeof req.query.trail_type != 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + 
+		"' AND trail_type = '" + req.query.trail_type + "'";
+	} else if (req.query.name == '' && typeof req.query.trail_type == 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails";
+>>>>>>> 66fd046790c6b1d6a7683531eb47bcada2254e63
 	}
 	console.log(mysqlStatement)
 	
@@ -156,7 +167,10 @@ router.route("/trails")
 router.route("/trails/:tid")
 .get(function(req, res) {
     // Get a trail with that ID
+<<<<<<< HEAD
 	//res.sendFile(path.join(__dirname + '/public/details.html'));
+=======
+>>>>>>> 66fd046790c6b1d6a7683531eb47bcada2254e63
     var response = [];
 
     connection.query("SELECT * FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {
