@@ -111,8 +111,11 @@ router.route("/trails")
     // Create a trail
 	var response = [];
 
-    if (typeof req.body.trail_type == "undefined"){
-        response.push({ "result": "error", "msg": "Please fill out trail type" });
+    if (
+        typeof req.body.trail_type == "undefined" &&
+        typeof req.body.name == "undefined"
+        ){
+        response.push({ "result": "error", "msg": "Please fill out all fields" });
         res.json(response);
     }
 
