@@ -16,11 +16,11 @@ CREATE TABLE Trails (
 
 CREATE TABLE Photographs (
         pid INT NOT NULL AUTO_INCREMENT,
-        file_path VARCHAR(256),
+        file_path VARCHAR(256) NOT NULL,
         lat DECIMAL(10, 8),
         lng DECIMAL(11, 8),
         date DATE,
-        tid INT,
+        tid INT NOT NULL,
         PRIMARY KEY (pid),
         FOREIGN KEY (tid) REFERENCES Trails(tid)
 );
@@ -30,7 +30,7 @@ CREATE TABLE Comments (
         user VARCHAR(256) NOT NULL,
         date DATETIME DEFAULT CURRENT_TIMESTAMP,
         rating INT,
-        tid INT,
+        tid INT NOT NULL,
         comment TEXT NOT NULL,
         PRIMARY KEY (cid),
         FOREIGN KEY (tid) REFERENCES Trails(tid)
