@@ -111,11 +111,8 @@ router.route("/trails")
     // Create a trail
 	var response = [];
 
-    if (
-        typeof req.body.trail_type == "undefined" &&
-        typeof req.body.name == "undefined"
-        ){
-        response.push({ "result": "error", "msg": "Please fill out all fields" });
+    if (typeof req.body.trail_type == "undefined"){
+        response.push({ "result": "error", "msg": "Please fill out trail type" });
         res.json(response);
     }
 
@@ -146,7 +143,7 @@ router.route("/trails")
             function(err, result) {
                 if (!err) {
                     if (result.affectedRows != 0){ 
-                        response.push({ "id": result.insertId });
+                        console.log(result)
                         response.push({ "result": "successs" });
                     } else{
                         response.push({ "result": "failure" });
@@ -249,23 +246,21 @@ const gpxStorage = multer.diskStorage({
 
 var gpxUpload = multer({ storage: gpxStorage });
 
-// Upload GPX data. Must have URL parameter tid to specify which trail to associate it with
-app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
+// Upload GPX data. 
+app.post("/api/gpx/:tid", gpxUpload.single("gpx"), function (req, res) {
     var response = [];
 
-    if (req.query.tid === undefined){
-		console.log("req.query.tid is undefined");
-		console.log("tid is " + req.query.tid)
+    if (req.params.tid === undefined){
         response.push({ "result": "failure" });
         response.push({ "err": "Must specify a trail id as a URL parameter" });
-        return res.json(response);
+        res.json(response);
     }
 
     if (!req.file) {
         console.log("No file received");
         response.push({ "result": "failure" });
         response.push({ "err": "No file recieved" });
-        return res.json(response);
+        res.json(response);
     } else {
         console.log("File received");
         console.log(req.file);
@@ -293,18 +288,18 @@ app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
                 gps_data: gpx
             }
 
-            connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.query.tid], function(err, result){
+            connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.params.tid], function(err, result){
                 if (err) {
                     response.push({ "result": "failure" });
                     response.push({ "err": err });
-                    return res.json(response);
+                    res.json(response);
                 } else {
                     if (result.affectedRows != 0){
                         response.push({ "result": "success" });
-                        return res.json(response);
+                        res.json(response);
                     } else {
                         response.push({ "result": "failure" });
-                        return res.json(response);
+                        res.json(response);
                     }
                 }
             });
