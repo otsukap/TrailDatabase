@@ -80,6 +80,11 @@ router.route("/trails")
     // Create a trail
 	var response = [];
 
+    if (typeof req.body.trail_type == "undefined"){
+        response.push({ "result": "error", "msg": "Please fill out trail type" });
+        res.json(response);
+    }
+
     if (req.body.trail_type == 'LAND'){
         if (
         	typeof req.body.surface_type == 'undefined' &&
@@ -94,41 +99,27 @@ router.route("/trails")
             response.push({ "result": "error", "msg": "Please fill out all fields" });
     }
 
-    if (
-            typeof req.body.name !== 'undefined' &&
-            typeof req.body.lat !== 'undefined' &&
-            typeof req.body.lng !== 'undefined' &&
-            typeof req.body.trail_type !== 'undfined'
-       ) {
+    const trail = {
+    	trail_type: req.body.trail_type,
+    	name: req.body.name,
+    	surface_type: req.body.surface_type,
+    	depth: req.body.depth,
+    	waterbody_type: req.body.waterbody_type
+    };
 
-        const trail = {
-        	trail_type: req.body.trail_type,
-        	name: req.body.name,
-        	lat: req.body.lat,
-        	lng: req.body.lng,
-        	surface_type: req.body.surface_type,
-        	elevation_change: req.body.elevation_change,
-        	depth: req.body.depth,
-        	waterbody_type: req.body.waterbody_type
-        };
-
-        connection.query("INSERT INTO Trails SET ?",
-                trail,
-                function(err, result) {
-                    if (!err) {
-                        if (result.affectedRows != 0)
-                            response.push({ "result": "successs" });
-                        else
-                            response.push({ "result": "failure" });
-                        res.json(response);
-                    } else {
-                        res.status(400).send(err);
-                    }
-                });
-    } else {
-        response.push({ "result": "error", "msg": "Please fill out all fields" });
-        res.json(response);
-    }
+    connection.query("INSERT INTO Trails SET ?",
+            trail,
+            function(err, result) {
+                if (!err) {
+                    if (result.affectedRows != 0)
+                        response.push({ "result": "successs" });
+                    else
+                        response.push({ "result": "failure" });
+                    res.json(response);
+                } else {
+                    res.status(400).send(err);
+                }
+            });
 });
 
 router.route("/trails/:tid")
@@ -175,41 +166,28 @@ router.route("/trails/:tid")
     console.log(req.body.lat);
     console.log(req.body.lng);
 
-    if (
-            typeof req.body.name !== 'undefined' &&
-            typeof req.body.lat !== 'undefined' &&
-            typeof req.body.lng !== 'undefined' 
-       ) {
-        const trail = {
-        	name: req.body.name,
-        	lat: req.body.lat,
-        	lng: req.body.lng,
-        	surface_type: req.body.surface_type,
-        	elevation_change: req.body.elevation_change,
-        	depth: req.body.depth,
-        	waterbody_type: req.body.waterbody_type
-        };
+    const trail = {
+    	name: req.body.name,
+    	surface_type: req.body.surface_type,
+    	depth: req.body.depth,
+    	waterbody_type: req.body.waterbody_type
+    };
 
-        connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.params.tid], function (err, result) {
-        	if (err) {
-        		response.push({ "result": "failure" });
-        		response.push({ "err": err });
-        		res.json(response);
-        	} else {
-        		if (result.affectedRows != 0){
-        			response.push({ "result": "success" });
-        			res.json(response);
-        		} else {
-        			response.push({ "result": "failure" });
-        			res.json(response);
-        		}
-        	}
-        });
-
-    } else {
-        response.push({ "result": "error", "msg": "Please fill out all fields" });
-        res.json(response);
-    }
+    connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.params.tid], function (err, result) {
+    	if (err) {
+    		response.push({ "result": "failure" });
+    		response.push({ "err": err });
+    		res.json(response);
+    	} else {
+    		if (result.affectedRows != 0){
+    			response.push({ "result": "success" });
+    			res.json(response);
+    		} else {
+    			response.push({ "result": "failure" });
+    			res.json(response);
+    		}
+    	}
+    });
 })
 .delete(function(req, res) {
     // Delete a trail with that ID
