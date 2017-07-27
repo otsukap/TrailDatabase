@@ -118,10 +118,11 @@ $('#searchTrailAdmin').submit(function(e){
 });
 
 //
-// Post request
+// Post request (all three: data, gpx, photos)
 //
 $('#addTrailAdmin').submit(function(e){
 	console.log("form has been submitted")
+	console.log($('#addTrailAdmin').serialize())
 	$.ajax({
 		type: "POST",
 		url: "api/trails",
@@ -129,8 +130,20 @@ $('#addTrailAdmin').submit(function(e){
 		success: function(res){
 			console.log(res)
 			searchResults(res)
+			tid = res[0].id;
+			console.log("tid in addtrailadmin is " + tid);
+			// If adding trail successfull get gpx data
+			$.ajax({
+				type: "POST",
+				url: "api/gpx",
+				data: {"tid": tid},
+				success: function(res){
+					console.log(res)
+					console.log("THIS FUCKING WORKED OMFG");
+				}
+			});
 		}
-	})
+	});
 	e.preventDefault();
 });
 

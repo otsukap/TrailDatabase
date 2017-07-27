@@ -254,16 +254,18 @@ app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
     var response = [];
 
     if (req.query.tid === undefined){
+		console.log("req.query.tid is undefined");
+		console.log("tid is " + req.query.tid)
         response.push({ "result": "failure" });
         response.push({ "err": "Must specify a trail id as a URL parameter" });
-        res.json(response);
+        return res.json(response);
     }
 
     if (!req.file) {
         console.log("No file received");
         response.push({ "result": "failure" });
         response.push({ "err": "No file recieved" });
-        res.json(response);
+        return res.json(response);
     } else {
         console.log("File received");
         console.log(req.file);
@@ -295,14 +297,14 @@ app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
                 if (err) {
                     response.push({ "result": "failure" });
                     response.push({ "err": err });
-                    res.json(response);
+                    return res.json(response);
                 } else {
                     if (result.affectedRows != 0){
                         response.push({ "result": "success" });
-                        res.json(response);
+                        return res.json(response);
                     } else {
                         response.push({ "result": "failure" });
-                        res.json(response);
+                        return res.json(response);
                     }
                 }
             });
