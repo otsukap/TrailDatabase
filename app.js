@@ -241,14 +241,14 @@ app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
     if (req.query.tid === undefined){
         response.push({ "result": "failure" });
         response.push({ "err": "Must specify a trail id as a URL parameter" });
-        res.send(response);
+        res.json(response);
     }
 
     if (!req.file) {
         console.log("No file received");
         response.push({ "result": "failure" });
         response.push({ "err": "No file recieved" });
-        res.send(response);
+        res.json(response);
     } else {
         console.log("File received");
         console.log(req.file);
@@ -315,66 +315,70 @@ const storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 // Create a photograph. Must have URL parameter tid to specify which trail to associate it with
-app.post("/api/photos", upload.single("photo"), function (req, res) {
+app.post("/api/photos", upload.array("photos", 100), function (req, res) {
 	var response = [];
 
 	if (req.query.tid === undefined){
 		response.push({ "result": "failure" });
 		response.push({ "err": "Must specify a trail id as a URL parameter" });
-        res.send(response);
+        res.json(response);
 	}
 
-	if (!req.file) {
-		console.log("No file received");
-		response.push({ "result": "failure" });
-		response.push({ "err": "No file recieved" });
-		res.send(response);
-	} else {
-		console.log("File received");
-		try {
-			new exif({ image: req.file.path }, function (err, exifData) {
-				if (err) {
-					console.log("Error" + err.message);
-					response.push({ "result": "failure" });
-					response.push({ "err" : err.message });
-					res.send(response);
-				}
-				else {
-					var lat_arr = exifData.gps.GPSLatitude;
-					var lng_arr = exifData.gps.GPSLongitude;
-					var lat = lat_arr[0] + lat_arr[1]/60.0 + lat_arr[2]/3600.0;
-					var lng = lng_arr[0] + lng_arr[1]/60.0 + lng_arr[2]/3600.0;
-					var datetime = exifData.exif.DateTimeOriginal;
-					var date = datetime.slice(0,10).split(":").join("-")
-					console.log("Exif data - " + "Lat: " + lat + ", Lng: " + lng + " Date: " + date);
+    if (!req.files) {
+        if (!req.file) {
+            console.log("No files received");
+            response.push({ "result": "failure" });
+            response.push({ "err": "No file recieved" });
+            res.json(response);
+        }
+    } else {
+        req.files.forEach(function(photo) {
+            console.log("Files received");
+            try {
+                new exif({ image: photo.path }, function (err, exifData) {
+                    if (err) {
+                        console.log("Error" + err.message);
+                        response.push({ "result": "failure" });
+                        response.push({ "err" : err.message });
+                        res.json(response);
+                    }
+                    else {
+                        var lat_arr = exifData.gps.GPSLatitude;
+                        var lng_arr = exifData.gps.GPSLongitude;
+                        var lat = lat_arr[0] + lat_arr[1]/60.0 + lat_arr[2]/3600.0;
+                        var lng = lng_arr[0] + lng_arr[1]/60.0 + lng_arr[2]/3600.0;
+                        var datetime = exifData.exif.DateTimeOriginal;
+                        var date = datetime.slice(0,10).split(":").join("-")
+                        console.log("Exif data - " + "Lat: " + lat + ", Lng: " + lng + " Date: " + date);
 
-					const photograph = {
-						"file_path": req.file.filename,
-						"lat": lat,
-						"lng": lng,
-						"date": date,
-						"tid": req.query.tid
-					};
+                        const photograph = {
+                            "file_path": photo.filename,
+                            "lat": lat,
+                            "lng": lng,
+                            "date": date,
+                            "tid": req.query.tid
+                        };
 
-					connection.query("INSERT INTO Photographs SET ?", photograph, function (err, rows) {
-						if (err) {
-							response.push({ "result": "failure" });
-							response.push({ "err": err });
-							res.send(response);
-						} else {
-							response.push({ "result": "success" });
-							res.send(response);
-						}
-					});
+                        connection.query("INSERT INTO Photographs SET ?", photograph, function (err, rows) {
+                            if (err) {
+                                response.push({ "result": "failure" });
+                                response.push({ "err": err });
+                                res.json(response);
+                            } else {
+                                response.push({ "result": "success" });
+                            }
+                        });
 
-				}
-			});
-		} catch (error) {
-			console.log("Error: " + error.message);
-			response.push({ "result": "failure" });
-			response.push({ "err": error.message });
-		}
-	}
+                    }
+                });
+            } catch (error) {
+                console.log("Error: " + error.message);
+                response.push({ "result": "failure" });
+                response.push({ "err": error.message });
+            }
+        });
+        res.json(response);
+    }
 });
 
 router.route("/photos/:pid")
