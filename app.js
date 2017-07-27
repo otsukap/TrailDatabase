@@ -7,7 +7,8 @@ var path = require("path");
 var crypto = require("crypto");
 var exif = require("exif").ExifImage;
 var fs = require("fs");
-var gpxParse = require("gpx-parse");
+var toGeoJson = require("togeojson");
+var DOMParser = require('xmldom').DOMParser;
 
 // Connect to mysql
 var connection = mysql.createConnection({
@@ -47,9 +48,9 @@ app.set("json spaces", 2);
 router.route("/trails")
 .get(function(req, res) {
 	console.log(req.query.name)
-	console.log(req.query.user_type)
     var response = [];
 	
+<<<<<<< HEAD
 	// If admin is searching
 	if (req.query.user_type == 'admin'){
 		console.log("user type: " + req.query.user_type)
@@ -89,6 +90,17 @@ router.route("/trails")
 		} else if (req.query.boundaries == '' && typeof req.query.trail_type != 'undefined') {
 			mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
 		}
+=======
+	if (req.query.name != '' && typeof req.query.trail_type == 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + "'";
+	} else if (typeof req.query.trail_type != 'undefined' && req.query.name == '') {
+		mysqlStatement = "SELECT * FROM Trails WHERE trail_type = '" + req.query.trail_type + "'";
+	} else if (req.query.name != '' && typeof req.query.trail_type != 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails WHERE name LIKE '" + req.query.name + 
+		"' AND trail_type = '" + req.query.trail_type + "'";
+	} else if (req.query.name == '' && typeof req.query.trail_type == 'undefined') {
+		mysqlStatement = "SELECT * FROM Trails";
+>>>>>>> 66fd046790c6b1d6a7683531eb47bcada2254e63
 	}
 	console.log(mysqlStatement)
 	
@@ -110,6 +122,11 @@ router.route("/trails")
     // Create a trail
 	var response = [];
 
+    if (typeof req.body.trail_type == "undefined"){
+        response.push({ "result": "error", "msg": "Please fill out trail type" });
+        res.json(response);
+    }
+
     if (req.body.trail_type == 'LAND'){
         if (
         	typeof req.body.surface_type == 'undefined' &&
@@ -124,47 +141,36 @@ router.route("/trails")
             response.push({ "result": "error", "msg": "Please fill out all fields" });
     }
 
-    if (
-            typeof req.body.name !== 'undefined' &&
-            typeof req.body.lat !== 'undefined' &&
-            typeof req.body.lng !== 'undefined' &&
-            typeof req.body.trail_type !== 'undefined'
-       ) {
+    const trail = {
+    	trail_type: req.body.trail_type,
+    	name: req.body.name,
+    	surface_type: req.body.surface_type,
+    	depth: req.body.depth,
+    	waterbody_type: req.body.waterbody_type
+    };
 
-        const trail = {
-        	trail_type: req.body.trail_type,
-        	name: req.body.name,
-        	lat: req.body.lat,
-        	lng: req.body.lng,
-        	surface_type: req.body.surface_type,
-        	elevation_change: req.body.elevation_change,
-        	depth: req.body.depth,
-        	waterbody_type: req.body.waterbody_type
-        };
-
-        connection.query("INSERT INTO Trails SET ?",
-                trail,
-                function(err, result) {
-                    if (!err) {
-                        if (result.affectedRows != 0)
-                            response.push({ "result": "successs" });
-                        else
-                            response.push({ "result": "failure" });
-                        res.json(response);
-                    } else {
-                        res.status(400).send(err);
-                    }
-                });
-    } else {
-        response.push({ "result": "error", "msg": "Please fill out all fields" });
-        res.json(response);
-    }
+    connection.query("INSERT INTO Trails SET ?",
+            trail,
+            function(err, result) {
+                if (!err) {
+                    if (result.affectedRows != 0)
+                        response.push({ "result": "successs" });
+                    else
+                        response.push({ "result": "failure" });
+                    res.json(response);
+                } else {
+                    res.status(400).send(err);
+                }
+            });
 });
 
 router.route("/trails/:tid")
 .get(function(req, res) {
     // Get a trail with that ID
+<<<<<<< HEAD
 	//res.sendFile(path.join(__dirname + '/public/details.html'));
+=======
+>>>>>>> 66fd046790c6b1d6a7683531eb47bcada2254e63
     var response = [];
 
     connection.query("SELECT * FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {
@@ -206,41 +212,28 @@ router.route("/trails/:tid")
     console.log(req.body.lat);
     console.log(req.body.lng);
 
-    if (
-            typeof req.body.name !== 'undefined' &&
-            typeof req.body.lat !== 'undefined' &&
-            typeof req.body.lng !== 'undefined' 
-       ) {
-        const trail = {
-        	name: req.body.name,
-        	lat: req.body.lat,
-        	lng: req.body.lng,
-        	surface_type: req.body.surface_type,
-        	elevation_change: req.body.elevation_change,
-        	depth: req.body.depth,
-        	waterbody_type: req.body.waterbody_type
-        };
+    const trail = {
+    	name: req.body.name,
+    	surface_type: req.body.surface_type,
+    	depth: req.body.depth,
+    	waterbody_type: req.body.waterbody_type
+    };
 
-        connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.params.tid], function (err, result) {
-        	if (err) {
-        		response.push({ "result": "failure" });
-        		response.push({ "err": err });
-        		res.json(response);
-        	} else {
-        		if (result.affectedRows != 0){
-        			response.push({ "result": "success" });
-        			res.json(response);
-        		} else {
-        			response.push({ "result": "failure" });
-        			res.json(response);
-        		}
-        	}
-        });
-
-    } else {
-        response.push({ "result": "error", "msg": "Please fill out all fields" });
-        res.json(response);
-    }
+    connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.params.tid], function (err, result) {
+    	if (err) {
+    		response.push({ "result": "failure" });
+    		response.push({ "err": err });
+    		res.json(response);
+    	} else {
+    		if (result.affectedRows != 0){
+    			response.push({ "result": "success" });
+    			res.json(response);
+    		} else {
+    			response.push({ "result": "failure" });
+    			res.json(response);
+    		}
+    	}
+    });
 })
 .delete(function(req, res) {
     // Delete a trail with that ID
@@ -269,30 +262,65 @@ var gpxUpload = multer({ storage: gpxStorage });
 app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
     var response = [];
 
-    if (req.query.tid == "undefined"){
-        response.push({ "result": failure });
+    if (req.query.tid === undefined){
+        response.push({ "result": "failure" });
         response.push({ "err": "Must specify a trail id as a URL parameter" });
+        res.json(response);
     }
 
     if (!req.file) {
         console.log("No file received");
         response.push({ "result": "failure" });
         response.push({ "err": "No file recieved" });
-        res.send(response);
+        res.json(response);
     } else {
         console.log("File received");
         console.log(req.file);
 
-        gpxParse.parseGpxFromFile(req.file.path, function(err, data) {
-            console.log(data);
+        fs.readFile(req.file.path, "utf8", function(err, data) {
+            var gpx = new DOMParser().parseFromString(data);
+
+            var converted = toGeoJson.gpx(gpx);
+            var coordinates = converted.features[0].geometry.coordinates;
+            var lat = coordinates[0][0];
+            var lng = coordinates[0][1];
+            var start_elevation = coordinates[0][2];
+            var end_elevation = coordinates[coordinates.length - 1][2];
+            var elevation_change = end_elevation - start_elevation;
+
+            console.log("GPX: " + gpx);
+            console.log("Lat: " + lat);
+            console.log("Lng: " + lng);
+            console.log("Elevation change: " + elevation_change);
+
+            const trail = {
+                lat: lat,
+                lng: lng,
+                elevation_change: elevation_change,
+                gps_data: gpx
+            }
+
+            connection.query("UPDATE Trails SET ? WHERE tid = ?", [trail, req.query.tid], function(err, result){
+                if (err) {
+                    response.push({ "result": "failure" });
+                    response.push({ "err": err });
+                    res.json(response);
+                } else {
+                    if (result.affectedRows != 0){
+                        response.push({ "result": "success" });
+                        res.json(response);
+                    } else {
+                        response.push({ "result": "failure" });
+                        res.json(response);
+                    }
+                }
+            });
 
             fs.unlink(req.file.path, function (err) {
                 if(err) throw err;
                 console.log("Deleted " + req.file.path);
-            })
+            });
         });
-
-        res.send(response);
     }
 
 });
@@ -311,65 +339,70 @@ const storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 // Create a photograph. Must have URL parameter tid to specify which trail to associate it with
-app.post("/api/photos", upload.single("photo"), function (req, res) {
+app.post("/api/photos", upload.array("photos", 100), function (req, res) {
 	var response = [];
 
-	if (req.query.tid == "undefined"){
-		response.push({ "result": failure });
-		response.push({ "err": "Must specify a trail id as a URL parameter" });
-	}
-
-	if (!req.file) {
-		console.log("No file received");
+	if (req.query.tid === undefined){
 		response.push({ "result": "failure" });
-		response.push({ "err": "No file recieved" });
-		res.send(response);
-	} else {
-		console.log("File received");
-		try {
-			new exif({ image: req.file.path }, function (err, exifData) {
-				if (err) {
-					console.log("Error" + err.message);
-					response.push({ "result": "failure" });
-					response.push({ "err" : err.message });
-					res.send(response);
-				}
-				else {
-					var lat_arr = exifData.gps.GPSLatitude;
-					var lng_arr = exifData.gps.GPSLongitude;
-					var lat = lat_arr[0] + lat_arr[1]/60.0 + lat_arr[2]/3600.0;
-					var lng = lng_arr[0] + lng_arr[1]/60.0 + lng_arr[2]/3600.0;
-					var datetime = exifData.exif.DateTimeOriginal;
-					var date = datetime.slice(0,10).split(":").join("-")
-					console.log("Exif data - " + "Lat: " + lat + ", Lng: " + lng + " Date: " + date);
-
-					const photograph = {
-						"file_path": req.file.filename,
-						"lat": lat,
-						"lng": lng,
-						"date": date,
-						"tid": req.query.tid
-					};
-
-					connection.query("INSERT INTO Photographs SET ?", photograph, function (err, rows) {
-						if (err) {
-							response.push({ "result": "failure" });
-							response.push({ "err": err });
-							res.send(response);
-						} else {
-							response.push({ "result": "success" });
-							res.send(response);
-						}
-					});
-
-				}
-			});
-		} catch (error) {
-			console.log("Error: " + error.message);
-			response.push({ "result": "failure" });
-			response.push({ "err": error.message });
-		}
+		response.push({ "err": "Must specify a trail id as a URL parameter" });
+        res.json(response);
 	}
+
+    if (!req.files) {
+        if (!req.file) {
+            console.log("No files received");
+            response.push({ "result": "failure" });
+            response.push({ "err": "No file recieved" });
+            res.json(response);
+        }
+    } else {
+        req.files.forEach(function(photo) {
+            console.log("Files received");
+            try {
+                new exif({ image: photo.path }, function (err, exifData) {
+                    if (err) {
+                        console.log("Error" + err.message);
+                        response.push({ "result": "failure" });
+                        response.push({ "err" : err.message });
+                        res.json(response);
+                    }
+                    else {
+                        var lat_arr = exifData.gps.GPSLatitude;
+                        var lng_arr = exifData.gps.GPSLongitude;
+                        var lat = lat_arr[0] + lat_arr[1]/60.0 + lat_arr[2]/3600.0;
+                        var lng = lng_arr[0] + lng_arr[1]/60.0 + lng_arr[2]/3600.0;
+                        var datetime = exifData.exif.DateTimeOriginal;
+                        var date = datetime.slice(0,10).split(":").join("-")
+                        console.log("Exif data - " + "Lat: " + lat + ", Lng: " + lng + " Date: " + date);
+
+                        const photograph = {
+                            "file_path": photo.filename,
+                            "lat": lat,
+                            "lng": lng,
+                            "date": date,
+                            "tid": req.query.tid
+                        };
+
+                        connection.query("INSERT INTO Photographs SET ?", photograph, function (err, rows) {
+                            if (err) {
+                                response.push({ "result": "failure" });
+                                response.push({ "err": err });
+                                res.json(response);
+                            } else {
+                                response.push({ "result": "success" });
+                            }
+                        });
+
+                    }
+                });
+            } catch (error) {
+                console.log("Error: " + error.message);
+                response.push({ "result": "failure" });
+                response.push({ "err": error.message });
+            }
+        });
+        res.json(response);
+    }
 });
 
 router.route("/photos/:pid")

@@ -14,6 +14,15 @@
     "http": "*",
     "multer": "*",
     "mysql": "*",
+<<<<<<< HEAD
     "path": "*"
+=======
+    "crypto": "*",
+    "exif": "*",
+    "fs": "*",
+    "togeojson": "*",
+    "path": "*",
+    "xmldom": "*"
+>>>>>>> 66fd046790c6b1d6a7683531eb47bcada2254e63
   }
 }
