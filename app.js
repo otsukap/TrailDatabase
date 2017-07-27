@@ -6,6 +6,8 @@ var multer = require("multer");
 var path = require("path");
 var crypto = require("crypto");
 var exif = require("exif").ExifImage;
+var fs = require("fs");
+var gpxParse = require("gpx-parse");
 
 // Connect to mysql
 var connection = mysql.createConnection({
@@ -241,6 +243,51 @@ router.route("/trails/:tid")
         else
             res.json({ "message": "Error deleting trail " + req.params.tid + ": " + err });
     });
+});
+
+const gpxStorage = multer.diskStorage({
+    destination: "./tmp/gpx",
+    filename: function (req, file, cb){
+        crypto.pseudoRandomBytes(16, function(err, raw) {
+            if (err) return cb(err);
+
+            cb(null, raw.toString("hex") + path.extname(file.originalname));
+        });
+    }
+});
+
+var gpxUpload = multer({ storage: gpxStorage });
+
+// Upload GPX data. Must have URL parameter tid to specify which trail to associate it with
+app.post("/api/gpx", gpxUpload.single("gpx"), function (req, res) {
+    var response = [];
+
+    if (req.query.tid == "undefined"){
+        response.push({ "result": failure });
+        response.push({ "err": "Must specify a trail id as a URL parameter" });
+    }
+
+    if (!req.file) {
+        console.log("No file received");
+        response.push({ "result": "failure" });
+        response.push({ "err": "No file recieved" });
+        res.send(response);
+    } else {
+        console.log("File received");
+        console.log(req.file);
+
+        gpxParse.parseGpxFromFile(req.file.path, function(err, data) {
+            console.log(data);
+
+            fs.unlink(req.file.path, function (err) {
+                if(err) throw err;
+                console.log("Deleted " + req.file.path);
+            })
+        });
+
+        res.send(response);
+    }
+
 });
 
 const storage = multer.diskStorage({

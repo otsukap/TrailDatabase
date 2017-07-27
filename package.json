@@ -5,13 +5,15 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "body-parser": "^1.17.2",
-    "crypto": "*",
-    "exif": "*",
+    "body-parser": "*",
     "express": "*",
     "http": "*",
-    "multer": "^1.3.0",
+    "multer": "*",
     "mysql": "*",
+    "crypto": "*",
+    "exif": "*",
+    "fs": "*",
+    "gpx-parse": "*"
     "path": "*"
   }
 }
