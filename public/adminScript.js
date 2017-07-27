@@ -67,7 +67,7 @@ function searchResults(results){
 		for (i = 1; i < nResults; i++){
 			name = results[1].rows[i].name
 			$('#editResults .panel-group').append("<div class='panel panel-default'>" + 
-			"<div class='panel-heading' role='tab' id='heading'" + i + ">" + 
+			"<div class='panel-heading' role='tab' id='heading" + i + "'>" + 
 			"<h4 class='panel-title'>" + 
 			"<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + i + "' aria-expanded='false' aria-controls='collapse" + i + "'>" + 
 			name + "</a></h4></div>" + 
@@ -81,7 +81,14 @@ function searchResults(results){
 
 function editForms(results, nResults){
 	$('#editResults .panel-body').each(function(i, obj){
-		$(this).append("<div>" + results[1].rows[i].name + ", " + results[1].rows[i].trail_type + ", " + results[1].rows[i].surface_type + "<br><br><button type='button' class='btn btn-danger delete' value=" + results[1].rows[i].tid + ">Delete trail</button></div>")
+		nameInput = results[1].rows[i].name;
+		trailTypeInput = results[1].rows[i].trail_type;
+		surfaceTypeInput = results[1].rows[i].surface_type;
+		waterbodyTypeInput = results[1].rows[i].waterbody_type;
+		depthInput = results[1].rows[i].depth;
+		$(this).append("<div>" + 
+		"<form class='form-horizontal' method='post' id='editTrailAdmin'>" + 
+		results[1].rows[i].name + ", " + results[1].rows[i].trail_type + ", " + results[1].rows[i].surface_type + "<br><br><button type='button' class='btn btn-danger delete' value=" + results[1].rows[i].tid + ">Delete trail</button></div>")
 	});
 	
 	//
@@ -94,6 +101,9 @@ function editForms(results, nResults){
 			url: "api/trails/" + tid,
 			success: function(res){
 				console.log(res)
+				$('#editResults :button').filter(function(){
+					return this.value == tid;
+				}).parent().parent().parent().parent().remove();
 			}
 		})
 		e.preventDefault();
@@ -129,14 +139,21 @@ $('#addTrailAdmin').submit(function(e){
 		data: $('#addTrailAdmin').serialize(),
 		success: function(res){
 			console.log(res)
-			searchResults(res)
-			tid = res[0].id;
+			tid = res[1].id;
 			console.log("tid in addtrailadmin is " + tid);
+			
+			var form = $("#addTrailAdmin")[0];
+			data = new FormData(form)
+			console.log("form: " + form)
+			console.log("data: " + data)
 			// If adding trail successfull get gpx data
 			$.ajax({
 				type: "POST",
+				enctype: "multipart/form-data",
+				processData: false,
+				contentType: false,
 				url: "api/gpx/" + tid,
-				data: "gpx=gpx",
+				data: data,
 				success: function(res){
 					console.log("tid in addtrailadmin is " + tid);
 					console.log(res)
