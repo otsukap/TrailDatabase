@@ -146,7 +146,7 @@ router.route("/trails")
             function(err, result) {
                 if (!err) {
                     if (result.affectedRows != 0){ 
-                        console.log(result);
+                        response.push({ "id": result.insertId });
                         response.push({ "result": "successs" });
                     } else{
                         response.push({ "result": "failure" });
