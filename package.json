@@ -13,7 +13,7 @@
     "crypto": "*",
     "exif": "*",
     "fs": "*",
-    "gpx-parse": "*"
+    "gpx-parse": "*",
     "path": "*"
   }
 }
