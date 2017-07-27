@@ -34,46 +34,41 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
 		  <!-- Search form -->
           <h2>Find a Trail</h2>
 			<div id="search">
-				<form class="form-horizontal">
+				<form class="form-horizontal" method="get" id="searchTrail">
 				  <div class="form-group">
-					<label for="inputType" class="col-sm-2 control-label">Type</label>
-					<div class="col-sm-10">
-					
-						<!-- Get type of trail -->
-					  <div class="btn-group" id="trailType">
-						  <button type="button" class="btn btn-default dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Type <span class="caret"></span>
-						  </button>
-						  <ul class="dropdown-menu">
-							<li><a href="#" value="land">Land Trail </a></li>
-							<li><a href="#" value="water">Water Trail </a></li>
-						  </ul>
-					  </div>
-					</div>
+				  <label for="inputTrail" class="col-sm-3 control-label">Trail Type</label>
+				  <div class="col-sm-9">
+					  <select class="form-control" id="inputTrail" name="trail_type">
+						<option value="land">Land Trail</option>
+						<option value="water">Water Trail</option>
+					  </select>
+				  </div>
 				  </div>
 				  <div class="form-group">
 					<!-- Get location -->
-					<label for="inputLocation" class="col-sm-2 control-label">Location</label>
-					<div class="col-sm-10">
-					  <input class="form-control" id="inputLocation" placeholder="Location">
+					<label for="inputLocation" class="col-sm-3 control-label">Location</label>
+					<div class="col-sm-9">
+					  <input class="form-control" id="inputLocation" name='location' placeholder="Location">
 					</div>
 				  </div>
 				  <div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
+					<div class="col-sm-offset-3 col-sm-9">
 					  <button type="submit" id="mainSearchButton" class="btn btn-default">Search</button>
 					</div>
 				  </div>
 				</form>
 			</div> 
-        </div>
-        <div class="col-md-8">
+			<div id="searchResults"></div>
+			</div>
+        <div class="col-md-6">
 		  <!-- Map container -->
           <div id="map" class="map"></div>
        </div>
+        </div>
       </div>
 
 	

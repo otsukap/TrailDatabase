@@ -64,3 +64,37 @@ var map = new ol.Map({
 		  zoom: 7
         })
       });
+	  
+//
+// Post request
+//
+$('#leaveComment').submit(function(e){
+	console.log("form has been submitted")
+	$.ajax({
+		type: "POST",
+		url: "api/comments",
+		data: $('#leaveComment').serialize(),
+		success: function(res){
+			console.log(res)
+			searchResults(res)
+		}
+	})
+	e.preventDefault();
+});
+
+//
+// Get request
+//
+$('#commentContainer').on('load', function(){
+	console.log("comment container loaded")
+	$.ajax({
+		type: "GET",
+		url: "api/comments",// + tid,
+		data: //tid
+		success: function(res){
+			console.log(res)
+			searchResults(res)
+		}
+	})
+	e.preventDefault();
+});

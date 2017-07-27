@@ -79,7 +79,7 @@ var map = new ol.Map({
 	}),
 	view: new ol.View({
 	  center: ol.proj.fromLonLat([-83.96, 27.95]),
-	  zoom: 7
+	  zoom: 6.5
 	})
 });
 	  
@@ -91,35 +91,70 @@ function refocusMap(coordinates){ // Coordinates in JSON
 		[coordinates.lng, coordinates.lat]));
 	map.getView().setZoom(11);
 	var extent = map.getView().calculateExtent(map.getSize())
-	console.log(extent)
-	//console.log(ol.proj.Projection.getCode())
-	console.log(ol.proj.transformExtent(extent, ol.proj.get('EPSG:3857'), ol.proj.get('EPSG:4326')))
+	var viewBoundaries = ol.proj.transformExtent(extent, ol.proj.get('EPSG:3857'), ol.proj.get('EPSG:4326'))
+	return viewBoundaries
 }
 
+//
+// Get search results for user search
+//
+function searchResults(results){
+		$('#searchResults').empty()
+	
+	if (results[0].result == "failure"){
+		$('#searchResults').append("<h4>Search returned no results</h4>")
+	}
+	else if ( results[0].result == "success"){
+		nResults = results[1].rows.length
+		$('#searchResults').append("<h4>Search returned " + nResults + " results</h4>")
+		$('#searchResults').append("<table class='table'><tbody></tbody></table>")
+		
+		for (i = 0; i < nResults; i++){
+			name = results[1].rows[i].name
+			trail_type = results[1].rows[i].trail_type
+			$('#searchResults tbody').append("<tr><td><b>" + name + "</b><br>" + trail_type + "</td></tr>")
+		}
+	}
+}
 	  
 //
 // Get lat long from search input
 //
 var geocoder = new google.maps.Geocoder();
-$('#mainSearchButton').click(function(){
+
+$('#searchTrail').submit(function(e){
+	console.log("you have submitted this form");
 	initializeGeocoder(geocoder)
-})
-var address
+	e.preventDefault();
+	console.log("test " + coordinates)
+});
+
+var address;
+var coordinates;
+var boundaries;
 function initializeGeocoder(geocoder) {
-	var coordinates
 	address = $('#inputLocation').val() + ", FL";
 	console.log(address)
 	geocoder.geocode({'address': address}, function(results, status){
-		coordinates = 0
 		if (status === "OK"){
 			console.log("found " + address)
 			coordinates = results[0].geometry.location.toJSON()
-			refocusMap(coordinates)
+			boundaries = refocusMap(coordinates)
+			console.log("boundaries: " + boundaries)
+			$.ajax({
+				type: "GET",
+				url: "api/trails",
+				data: $('#searchTrail').serialize() + "&user_type=user" + 
+				"&boundaries=[" + boundaries + "]",
+				success: function(res){
+					console.log(res)
+					//searchResults(res)
+				}
+			})
 		}
 		else {
 			alert("Cannot find " + address)
 		}
 	});
-	return coordinates
 }
 
