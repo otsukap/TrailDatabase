@@ -252,9 +252,18 @@ $('#addTrailAdmin').submit(function(e){
 				url: "api/gpx/" + tid,
 				data: data,
 				success: function(res){
-					console.log("tid in addtrailadmin is " + tid);
-					console.log(res)
-					console.log("THIS FUCKING WORKED OMFG");
+					// Upload photos
+					$.ajax({
+						type: "POST",
+						enctype: "multipart/form-data",
+						processData: false,
+						contentType: false,
+						url: "api/photos/" + tid,
+						data: data,
+						success: function(res) {
+							console.log(res);
+						}
+					});
 				}
 			});
 		}

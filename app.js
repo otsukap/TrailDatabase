@@ -359,6 +359,7 @@ var upload = multer({ storage: storage });
 // Create a photograph.
 app.post("/api/photos/:tid", upload.array("photos", 100), function (req, res) {
 	var response = [];
+    console.log(req);
 
 	if (req.params.tid === undefined){
 		response.push({ "result": "failure" });
