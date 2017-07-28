@@ -133,7 +133,7 @@ function searchResults(results){
 			if (depth != null) {
 				depth_info = "Depth: " + depth + "<br>";
 			}
-			$('#searchResults tbody').append("<tr><td><b><a href='api/trails/" + tid + "'>" + name + "</a></b><br>" + "Trail type: " + trail_type + "<br>" + 
+			$('#searchResults tbody').append("<tr><td><b><a href='/details.html?tid=" + tid + "'>" + name + "</a></b><br>" + "Trail type: " + trail_type + "<br>" + 
 			surface_type_info + 
 			elevation_info + 
 			waterbody_type_info + 

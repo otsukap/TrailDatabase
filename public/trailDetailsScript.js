@@ -66,7 +66,7 @@ var map = new ol.Map({
       });
 	  
 //
-// Post request
+// Post request for comments
 //
 $('#leaveComment').submit(function(e){
 	console.log("form has been submitted")
@@ -81,9 +81,32 @@ $('#leaveComment').submit(function(e){
 			alert("Your comment has been submitted");
 			$('#user').val('');
 			$('#comment').val('');
+			loadComments();
 		}
 	})
 	e.preventDefault();
+});
+
+//
+// Get request for comments
+//
+function loadComments(){
+	var tid = getParameterByName("tid");
+	console.log("tid is " + tid)
+	$.ajax({
+		type: "GET",
+		url: "api/comments/" + tid,
+		success: function(res){
+			console.log(res)
+			$('#commentContainer tbody').empty();
+			for(i = 0; i < res[1].rows.length; i++){
+				$('#commentContainer tbody').append("<tr><td><b>Name: </b> " + res[1].rows[i].user + "<br><b>Rating: </b>" + res[1].rows[i].rating + "<br><b>Comment: </b>" + res[1].rows[i].comment + "</td></tr>")
+			}
+		}
+	});
+}
+$(document).ready(function(){
+	loadComments();
 });
 
 //
@@ -137,6 +160,7 @@ $(document).ready(function() {
 		$("#trailDetails h2").text(name);
 		$("#splash div p").text(name);
 		$("#imageContainer h3").text("Images from " + name);
+		$("#commentContainer h3").text("Comments from " + name);
 		$("label[for='user']").text("Leave a comment about " + name);
 
 		var trail_details = "";
