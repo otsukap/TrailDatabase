@@ -153,9 +153,9 @@ function editForms(results, nResults){
 			waterbodyTypeInput = "<div class='form-group'>" + 
 						"<label for='inputSurface" + i + "' class='col-sm-2 control-label'>Body Type</label><div class='col-sm-6'>" + 
 						  "<select class='form-control' id='inputSurface" + i + "' name='waterbody_type'>" +
-							"<option value='river'>River</option>" +
-							"<option value='shore'>Shore</option>" +
-							"<option value='lake'>Lake</option>" +
+							"<option value='river' " + riverSelected + ">River</option>" +
+							"<option value='shore' " + shoreSelected + ">Shore</option>" +
+							"<option value='lake' " + lakeSelected + ">Lake</option>" +
 						  "</select></div></div>"
 			depthInput = "<div class='form-group'>" + 
 						"<label for='inputDepth" + i + "' class='col-sm-2 control-label'>Depth</label><div class='col-sm-6'>" + 
@@ -183,6 +183,7 @@ function editForms(results, nResults){
 			data: $("#editTrailAdmin").serialize(),
 			success: function(res){
 				console.log(res)
+				window.location.href = "details.html?tid=" + tid;
 			}
 		});
 		e.preventDefault();

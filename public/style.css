@@ -3,6 +3,11 @@ body {
   padding-bottom: 20px;
 }
 
+#adminLink{
+    position: absolute;
+    right: 20px;
+}
+
 .scrollable-menu {
     height: auto;
     max-height: 200px;
