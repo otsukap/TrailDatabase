@@ -159,7 +159,6 @@ router.route("/trails")
 router.route("/trails/:tid")
 .get(function(req, res) {
     // Get a trail with that ID
-	//res.sendFile(path.join(__dirname + '/public/details.html'));
     var response = [];
 
     connection.query("SELECT * FROM Trails WHERE tid = " + req.params.tid, function(err, rows, fields) {
@@ -167,11 +166,11 @@ router.route("/trails/:tid")
             console.log(rows);
             response.push({ "result": "success" });
             response.push({ "rows": rows });
-            res.json(response);
+            return res.json(response);
         } else {
             response.push({ "result": "failure" });
             response.push({ "error": err });
-            res.json(response);
+            return res.json(response);
         }
     });
 })
@@ -181,11 +180,10 @@ router.route("/trails/:tid")
 
     if (req.body.trail_type == 'LAND'){
         if (
-        	typeof req.body.surface_type == 'undefined' &&
-        	typeof req.body.elevation_change == 'undefined'
+        	typeof req.body.surface_type == 'undefined'
         	) {
         	response.push({ "result": "error", "msg": "Please fill out all fields" });
-        	res.json(response);
+        	return res.json(response);
         }
     } else if (req.body.trail_type == 'WATER') {
         if (
@@ -193,7 +191,7 @@ router.route("/trails/:tid")
         	typeof req.body.depth == 'undefined'
         	) {
         	response.push({ "result": "error", "msg": "Please fill out all fields" });
-        	res.json(response);
+        	return res.json(response);
         }
     }
 
@@ -212,14 +210,14 @@ router.route("/trails/:tid")
     	if (err) {
     		response.push({ "result": "failure" });
     		response.push({ "err": err });
-    		res.json(response);
+    		return res.json(response);
     	} else {
     		if (result.affectedRows != 0){
     			response.push({ "result": "success" });
     			res.json(response);
     		} else {
     			response.push({ "result": "failure" });
-    			res.json(response);
+    			return res.json(response);
     		}
     	}
     });

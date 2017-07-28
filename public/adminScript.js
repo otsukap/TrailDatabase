@@ -4,6 +4,7 @@
 $('#inputTrail').click(function(){
 	
 	$('#surfaceForm').empty()
+	$('#depthForm').empty()
 	
 	if ($(this).val() == "land"){
 		$('#surfaceForm').append("<label for='inputSurface' class='col-sm-2 control-label'>Surface Type</label><div class='col-sm-6'>" + 
@@ -21,6 +22,8 @@ $('#inputTrail').click(function(){
 							"<option value='shore'>Shore</option>" +
 							"<option value='lake'>Lake</option>" +
 						  "</select></div>")
+		$('#depthForm').append("<label for='inputDepth' class='col-sm-2 control-label'>Depth</label><div class='col-sm-6'>" + 
+						  "<input class='form-control' id='inputDepth' name='depth', placeholder='Average depth in feet'</div>")
 		
 		
 	}
@@ -80,15 +83,109 @@ function searchResults(results){
 }
 
 function editForms(results, nResults){
+	// For each of the results from admin search, add an accordion and an edit form
 	$('#editResults .panel-body').each(function(i, obj){
-		nameInput = results[1].rows[i].name;
-		trailTypeInput = results[1].rows[i].trail_type;
-		surfaceTypeInput = results[1].rows[i].surface_type;
-		waterbodyTypeInput = results[1].rows[i].waterbody_type;
-		depthInput = results[1].rows[i].depth;
+		nameInput = "<div class='form-group'>" + 
+					"<label for='inputName" + i + "' class='col-sm-2 control-label'>Name</label>" + 
+					"<div class='col-sm-6'>" + 
+					  "<input class='form-control' id='inputName" + i + "' name='name' placeholder='Name'" + 
+					  "value='" + results[1].rows[i].name + "'>" + 
+					"</div></div>";
+		trailTypeInput = "";
+		surfaceTypeInput = "";
+		waterbodyTypeInput = "";
+		depthInput = "";
+					
+		// If the trail type is land or water, add the appropriate form
+		if (results[1].rows[i].trail_type == "land"){
+			dirtSelected = "";
+			gravelSelected = "";
+			asphaltSelected = "";
+			variousSelected = "";
+			
+			if (results[1].rows[i].surface_type == "dirt"){
+				dirtSelected = "selected='selected'";
+			} else if (results[1].rows[i].surface_type == "gravel"){
+				gravelSelected = "selected='selected'";
+			} else if (results[1].rows[i].surface_type == "asphalt"){
+				asphaltSelected = "selected='selected'";
+			} else if (results[1].rows[i].surface_type == "various"){
+				variousSelected = "selected='selected'";
+			}
+			
+			trailTypeInput = "<div class='form-group'>" + 
+						"<label for='inputTrail" + i + "' class='col-sm-2 control-label'>Trail Type</label>" + 
+						"<div class='col-sm-6'>" + 
+						  "<select class='form-control' id='inputTrail" + i + "' name='trail_type'>" + 
+							"<option value='land' selected='selected'>Land Trail</option>" + 
+							"<option value='water'>Water Trail</option>" + 
+						  "</select>" + 
+						"</div></div>";
+			surfaceTypeInput = "<div class='form-group' id='surfaceForm'>" + 
+				    "<label for='inputSurface" + i + "' class='col-sm-2 control-label'>Surface Type</label><div class='col-sm-6'>" + 
+						  "<select class='form-control' id='inputSurface" + i + "' name='surface_type'>" + 
+							"<option value='dirt' " + dirtSelected + ">Dirt</option>" + 
+							"<option value='gravel' " + gravelSelected + ">Gravel</option>" + 
+							"<option value='asphalt' " + asphaltSelected + ">Asphalt</option>" + 
+							"<option value='various' " + variousSelected + ">Various</option>" + 
+						  "</select></div></div>"		  
+		} else if (results[1].rows[i].trail_type == "water"){
+			riverSelected = "";
+			shoreSelected = "";
+			lakeSelected = "";
+			
+			if (results[1].rows[i].waterbody_type == "river"){
+				riverSelected = "selected='selected'";
+			} else if (results[1].rows[i].waterbody_type == "shore"){
+				shoreSelected = "selected='selected'";
+			} else if (results[1].rows[i].waterbody_type == "lake"){
+				lakeSelected = "selected='selected'";
+			}
+			
+			trailTypeInput = "<div class='form-group'>" + 
+						"<label for='inputTrail" + i + "' class='col-sm-2 control-label'>Trail Type</label>" + 
+						"<div class='col-sm-6'>" + 
+						  "<select class='form-control' id='inputTrail" + i + "' name='trail_type'>" + 
+							"<option value='land'>Land Trail</option>" + 
+							"<option value='water' selected='selected'>Water Trail</option>" + 
+						  "</select>" + 
+						"</div></div>";
+			waterbodyTypeInput = "<div class='form-group'>" + 
+						"<label for='inputSurface" + i + "' class='col-sm-2 control-label'>Body Type</label><div class='col-sm-6'>" + 
+						  "<select class='form-control' id='inputSurface" + i + "' name='waterbody_type'>" +
+							"<option value='river'>River</option>" +
+							"<option value='shore'>Shore</option>" +
+							"<option value='lake'>Lake</option>" +
+						  "</select></div></div>"
+			depthInput = "<div class='form-group'>" + 
+						"<label for='inputDepth" + i + "' class='col-sm-2 control-label'>Depth</label><div class='col-sm-6'>" + 
+						"<input class='form-control' id='inputDepth" + i + "' name='depth', placeholder='Average depth in feet' value='" + results[1].rows[i].depth + "'></div></div>"
+		}
+		
+		
 		$(this).append("<div>" + 
 		"<form class='form-horizontal' method='post' id='editTrailAdmin'>" + 
-		results[1].rows[i].name + ", " + results[1].rows[i].trail_type + ", " + results[1].rows[i].surface_type + "<br><br><button type='button' class='btn btn-danger delete' value=" + results[1].rows[i].tid + ">Delete trail</button></div>")
+		nameInput + trailTypeInput + surfaceTypeInput + waterbodyTypeInput + depthInput + 
+		"<div class='form-group'><div class='col-sm-offset-2 col-sm-6'>" + 
+		"<button type='submit' class='btn btn-primary modify' value=" + results[1].rows[i].tid + ">Modify trail</button>" + 
+		"<button type='button' class='btn btn-danger delete' value=" + results[1].rows[i].tid + ">Delete trail</button></div></div></form>")
+	});
+	
+	//
+	// Modify trail
+	//
+	$('#editTrailAdmin').submit(function(e){
+		tid = $('#editTrailAdmin .modify').val();
+		console.log($("#editTrailAdmin").serialize());
+		$.ajax({
+			type: "PUT",
+			url: "api/trails/" + tid,
+			data: $("#editTrailAdmin").serialize(),
+			success: function(res){
+				console.log(res)
+			}
+		});
+		e.preventDefault();
 	});
 	
 	//

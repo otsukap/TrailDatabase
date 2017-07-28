@@ -68,6 +68,10 @@ span.glyphicon.glyphicon-remove-circle {
 	bottom: 0px;
 }
 
+.delete{
+	margin-left: 5px;
+}
+
 /* #trailType, */
 /* #trailType button { */
 	/* width: 100%; */
