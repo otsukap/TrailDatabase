@@ -277,16 +277,22 @@ var pictures = [];
 $('#browsePicture input').change(function(){
 	s = this.files.length
 	input = this
-	
-	for (i = 0; i < s; i++){
-		$('.pictureFiles').prepend("<input class='form-control inputPicture' placeholder='Image File'>"
-		)
-		//$('#browsePicture').before("<label class='btn btn-link pictureButtons'> <span class='glyphicon glyphicon-remove-circle' aria-hidden='true'></span></label><br>")
+	stringOfFiles = ''
+	for (i = 0; i < input.files.length; i++){
+		stringOfFiles = stringOfFiles + input.files[i].name + ", ";
 	}
-	$('.pictureFiles').ready(function(){
-		for (i = 0; i < s; i++){
-			c = i + 1
-			$('.inputPicture:nth-child(' + c + ')').val(input.files[i].name)
-		}
-	})
+	$('.inputPicture').val(stringOfFiles)
+	
+	
+	// for (i = 0; i < s; i++){
+		// $('.pictureFiles').prepend("<input class='form-control inputPicture' placeholder='Image File'>"
+		// )
+		// //$('#browsePicture').before("<label class='btn btn-link pictureButtons'> <span class='glyphicon glyphicon-remove-circle' aria-hidden='true'></span></label><br>")
+	// }
+	// $('.pictureFiles').ready(function(){
+		// for (i = 0; i < s; i++){
+			// c = i + 1
+			// $('.inputPicture:nth-child(' + c + ')').val(input.files[i].name)
+		// }
+	// })
 });
