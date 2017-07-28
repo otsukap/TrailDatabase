@@ -44,6 +44,11 @@ app.use("/api", router);
 app.locals.pretty = true;
 app.set("json spaces", 2);
 
+// Redirect to trail details page
+app.get("/trails/:tid", function(req, res) {
+    res.redirect("/details.html?tid=" + req.params.tid);
+});
+
 // Get trails
 router.route("/trails")
 .get(function(req, res) {
@@ -419,23 +424,6 @@ app.post("/api/photos/:tid", upload.array("photos", 100), function (req, res) {
 });
 
 router.route("/photos/:pid")
-.get(function(req, res) {
-    // Get a photo with that ID
-    var response = [];
-
-    connection.query("SELECT * FROM Photographs WHERE pid = " + req.params.pid, function(err, rows, fields) {
-        if (!err && rows.length > 0) {
-            console.log(rows);
-            response.push({ "result": "success" });
-            response.push({ "rows": rows });
-            res.json(response);
-        } else {
-            response.push({ "result": "failure" });
-            response.push({ "error": err });
-            res.json(response);
-        }
-    });
-})
 .delete(function(req, res) {
     // Delete a photo with that ID
     connection.query("DELETE FROM Photographs WHERE pid = " + req.params.pid, function(err, rows, fields) {
