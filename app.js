@@ -383,7 +383,7 @@ app.post("/api/photos/:tid", upload.array("photos", 100), function (req, res) {
                         console.log("Error" + err.message);
                         response.push({ "result": "failure" });
                         response.push({ "err" : err.message });
-                        res.json(response);
+                        return res.json(response);
                     }
                     else {
                         var lat_arr = exifData.gps.GPSLatitude;
@@ -406,9 +406,10 @@ app.post("/api/photos/:tid", upload.array("photos", 100), function (req, res) {
                             if (err) {
                                 response.push({ "result": "failure" });
                                 response.push({ "err": err });
-                                res.json(response);
+                                return res.json(response);
                             } else {
                                 response.push({ "result": "success" });
+                                return res.json(response);
                             }
                         });
 
@@ -418,9 +419,10 @@ app.post("/api/photos/:tid", upload.array("photos", 100), function (req, res) {
                 console.log("Error: " + error.message);
                 response.push({ "result": "failure" });
                 response.push({ "err": error.message });
+                return res.json(response);
             }
         });
-        res.json(response);
+        return res.json(response);
     }
 });
 
