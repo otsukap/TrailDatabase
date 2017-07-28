@@ -269,6 +269,7 @@ $('#addTrailAdmin').submit(function(e){
 					}
 				});
 			}
+			window.location.href = "details.html?tid=" + tid;
 		}
 	});
 	e.preventDefault();
