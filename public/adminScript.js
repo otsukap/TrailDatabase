@@ -252,20 +252,23 @@ $('#addTrailAdmin').submit(function(e){
 				url: "api/gpx/" + tid,
 				data: data,
 				success: function(res){
-					// Upload photos
-					$.ajax({
-						type: "POST",
-						enctype: "multipart/form-data",
-						processData: false,
-						contentType: false,
-						url: "api/photos/" + tid,
-						data: data,
-						success: function(res) {
-							console.log(res);
-						}
-					});
+					console.log(res)
 				}
-			});
+			});			
+			if ($('#browsePicture input').val() != ''){
+				// Upload photos
+				$.ajax({
+					type: "POST",
+					enctype: "multipart/form-data",
+					processData: false,
+					contentType: false,
+					url: "api/photos/" + tid,
+					data: data,
+					success: function(res) {
+						console.log(res);
+					}
+				});
+			}
 		}
 	});
 	e.preventDefault();
