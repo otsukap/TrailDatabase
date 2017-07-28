@@ -53,7 +53,7 @@ var vector = new ol.layer.Vector({
 //
 var map = new ol.Map({
         layers: [raster, vector],
-        target: 'map',
+        target: '#map',
         controls: ol.control.defaults({
           attributionOptions:({
             collapsible: false
@@ -70,13 +70,17 @@ var map = new ol.Map({
 //
 $('#leaveComment').submit(function(e){
 	console.log("form has been submitted")
+	var tid = getParameterByName("tid");
+	console.log("tid is " + tid)
 	$.ajax({
 		type: "POST",
 		url: "api/comments",
-		data: $('#leaveComment').serialize(),
+		data: $('#leaveComment').serialize() + "&tid=" + tid,
 		success: function(res){
 			console.log(res)
-			searchResults(res)
+			alert("Your comment has been submitted");
+			$('#user').val('');
+			$('#comment').val('');
 		}
 	})
 	e.preventDefault();
