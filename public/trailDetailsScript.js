@@ -85,6 +85,7 @@ $('#leaveComment').submit(function(e){
 //
 // Get request
 //
+/*
 $('#commentContainer').on('load', function(){
 	console.log("comment container loaded")
 	$.ajax({
@@ -97,4 +98,66 @@ $('#commentContainer').on('load', function(){
 		}
 	})
 	e.preventDefault();
+});
+*/
+
+// 
+// Get a parameter from the url
+//
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+//
+// Populate trail data on page load
+//
+$(document).ready(function() {
+	var tid = getParameterByName("tid");
+	
+	$.get("/api/trails/" + tid, function(data) {
+		console.log(data);
+		var trail = data[1].rows[0];
+		var name = trail.name;
+		var trail_type = trail.trail_type;
+		var surface_type = trail.surface_type;
+		var elevation_change = trail.elevation_change;
+		var depth = trail.depth;
+		var waterbody_type = trail.waterbody_type;
+		
+		$("#trailDetails h2").text(name);
+		$("#splash div p").text(name);
+		$("#imageContainer h3").text("Images from " + name);
+		$("label[for='user']").text("Leave a comment about " + name);
+
+		var trail_details = "";
+		trail_details += "<ul>";
+		trail_details += "<li>" + "Trail type: " + trail_type + "</li>";
+		if (elevation_change !== null)
+			trail_details += "<li>" + "Elevation Change: " + elevation_change + " meters" + "</li>";
+		if (surface_type !== null)
+			trail_details += "<li>" + "Surface Type: " + surface_type + "</li>";
+		if (depth !== null)
+			trail_details += "<li>" + "Depth: " + depth + " feet" + "</li>";
+		if (waterbody_type !== null)
+			trail_details += "<li>" + "Waterbody type: " + waterbody_type + "</li>";
+		trail_details += "</ul>";
+
+		$("#trailDetails h3").html(trail_details);
+	});
+
+	$.get("/api/photos/" + tid, function(data) {
+		console.log(data);
+		var photos = data[1].rows;
+
+		photos.forEach(function(photo) {
+			console.log(photo.file_path);
+			$("#imageContainer").append("<div class=\"trailImage\" style=\"background-image:url('" + "photos/" + photo.file_path + "');\"></div>");
+		});
+	});
 });
