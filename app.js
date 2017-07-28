@@ -364,7 +364,7 @@ app.post("/api/photos/:tid", upload.array("photos", 100), function (req, res) {
 	if (req.params.tid === undefined){
 		response.push({ "result": "failure" });
 		response.push({ "err": "Must specify a trail id as a URL parameter" });
-        res.json(response);
+        return res.json(response);
 	}
 
     if (!req.files) {
@@ -372,7 +372,7 @@ app.post("/api/photos/:tid", upload.array("photos", 100), function (req, res) {
             console.log("No files received");
             response.push({ "result": "failure" });
             response.push({ "err": "No file recieved" });
-            res.json(response);
+            return res.json(response);
         }
     } else {
         req.files.forEach(function(photo) {
